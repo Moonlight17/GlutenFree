@@ -11,5 +11,5 @@ urlpatterns = [
     path('tag/', views.TagLoad.as_view(), name='TagLoad'),
     path('recept/<int:id>/', views.ListCurrentRecept.as_view(), name='ListCurrentRecept'),
     path('add/', views.AddRecept.as_view(), name='add'),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

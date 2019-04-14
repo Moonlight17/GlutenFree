@@ -7,6 +7,8 @@
       <input v-model="Password" placeholder="Password"/>
       <input autocomplete="off" type="file" id="my_file" ref="files" name="file" v-on:change="handleFilesUploads" />
       <button @click="login()">Зарегистрироваться</button>
+		<pre>{{$data}}</pre>
+
     </div>
     <!-- <h1>{{list}}</h1> -->
   </div>
@@ -20,7 +22,7 @@
         msg: "Регистрация",
         Login: "",
         Password: "",
-        Avatar: "",
+        Avatar: [],
       };
     },
     methods: {
@@ -38,14 +40,15 @@
           localStorage.setItem("auth_token", response.data.data.attributes.auth_token)
         },
         function(error) {
-          console.log(error.detail);
+          console.log(error);
         }
       );
       },
 	  handleFilesUploads() {
 			let uploadedFiles = this.$refs.files.files;
 			for (var i = 0; i < uploadedFiles.length; i++) {
-				this.Avatar.push(uploadedFiles[i]);
+				console.log(uploadedFiles[i]);
+				this.Avatar = uploadedFiles[i];
 			}
 		},
     },

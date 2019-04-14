@@ -3,7 +3,7 @@
 		<img src="./assets/logo.png">
 		<div>
 			<h5 class="card-title">{{recept.title}}</h5>
-			<p class="card-text">{{author.username}}</p>
+			<p class="card-text">{{author.username}} KJ{<img :src="host_url+author.avatar"></p>
 			<ul class="card-text">
 				<li v-for="rec in recept.recepts_text">{{rec.title}}</li>
 			</ul>
@@ -17,6 +17,7 @@
 		name: "Recept",
 		data() {
 			return {
+				host_url: "http://127.0.0.1:8000",
 				list_url: "http://127.0.0.1:8000/recept/",
 				recept: [],
 				author:'',
