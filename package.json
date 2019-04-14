@@ -1,0 +1,28 @@
+{
+  "name": "webpack-tutorial",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack main.js build.js --watch"
+  },
+  "devDependencies": {
+    "babel-core": "*",
+    "babel-loader": "*",
+    "babel-plugin-transform-runtime": "*",
+    "babel-preset-es2015": "*",
+    "css-loader": "*",
+    "jade": "*",
+    "node-sass": "*",
+    "sass-loader": "*",
+    "vue": "*",
+    "vue-html-loader": "*",
+    "vue-loader": "*",
+    "vue-style-loader": "*",
+    "webpack": "*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
