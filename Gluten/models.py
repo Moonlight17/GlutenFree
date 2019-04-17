@@ -32,7 +32,7 @@ class Recept(models.Model):
 	title = models.CharField(max_length=200, default='Вкуснятина')
 	recepts_text = JSONField()
 	pub_date = models.DateTimeField(verbose_name="Дата и время публикации",auto_now=True)
-	creater = models.ForeignKey(User, verbose_name="Автор", on_delete=models.CASCADE)
+	user = models.ForeignKey(User, verbose_name="Автор", on_delete=models.CASCADE)
 	tag_name = models.ManyToManyField(Tag)
 	likes = models.IntegerField(default=0)
 
@@ -45,7 +45,7 @@ class Recept(models.Model):
 # Create your models here.
 class Comment(models.Model):
 	recept = models.ForeignKey(Recept, default= None, on_delete=models.CASCADE)
-	text = models.CharField(max_length=200, default='Вкуснятина')
+	text = models.CharField(max_length=200, default='Комментарий')
 	pub_date = models.DateTimeField(verbose_name="Дата и время публикации", auto_now=True)
 	user = models.ForeignKey(User, verbose_name="Автор", on_delete=models.CASCADE)
 	likes = models.IntegerField(default=0)

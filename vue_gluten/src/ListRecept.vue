@@ -10,6 +10,20 @@
 			</ul>
 			<a v-for="tag in recept.tag_name" href="#" class="badge badge-light">{{tag.name}}</a>
 		</div>
+		<div id="recept" @scroll="onScroll">
+			<div style="padding:0; margin:0;">
+				<div :key="key" v-for="(rec, key) in list" class="card mb-3">
+					<!-- <img src="..." class="card-img-top" alt="..."> -->
+					<div class="card-body" :id="rec.id">
+						<h5 class="card-title">{{rec.title}}</h5>
+						<router-link :to="{ name: 'current_user', params: { id: rec.user.id } }" class="card-text">
+							{{rec.user.username}} <img id="avatar" :src="host_url + rec.user.avatar">
+						</router-link>
+						<p class="card-text"><small class="text-muted">{{rec.pub_date}}</small></p>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div v-show="tokens == true" id="comment">
 			<form v-on:submit.prevent="add_comment">
 				<textarea v-model="comment">
@@ -28,11 +42,15 @@
 			return {
 				host_url: "http://127.0.0.1:8000",
 				list_url: "http://127.0.0.1:8000/recept/",
+				list_comment_url: "http://127.0.0.1:8000/comments/",
 				comm_url: "http://127.0.0.1:8000/addcomment/",
 				recept: [],
+				comments: [],
 				author: '',
 				receptid: '',
 				comment: '',
+				start: 0,
+				list: [],
 			};
 		},
 		computed: {
@@ -44,21 +62,48 @@
 			}
 		},
 		methods: {
-			all: function () {
+			Recept: function () {
 				this.$http.get(this.list_url + this.receptid + "/").then(
 					function (response) {
 						this.recept = response.data.data[0];
-						this.author = this.recept['creater'];
+						this.author = this.recept['user'];
 					},
 					function (error) {
 						// console.log(error);
 					}
 				);
 			},
-			add_comment: function() {
+			Comments: function () {
+				this.$http.get(this.list_comment_url + this.receptid + "/" + this.start + "/").then(
+					function (response) {
+						var list = response.data;
+						this.comments = this.comments.concat(list.data);
+						this.loading = false;
+					},
+					function (error) {
+						// console.log(error);
+					}
+				);
+			},
+			onScroll: function (event) {
+				var wrapper = event.target,
+					list = wrapper.firstElementChild
+
+				var scrollTop = wrapper.scrollTop,
+					wrapperHeight = wrapper.offsetHeight,
+					listHeight = list.offsetHeight
+
+				var diffheight = listHeight - wrapperHeight;
+				if (diffheight <= scrollTop && !this.loading) {
+					this.start += 9
+					this.Comments();
+				}
+
+			},
+			add_comment: function () {
 
 				let NewCommentData = new FormData();
-				NewCommentData={
+				NewCommentData = {
 					'Text': this.comment,
 					'Recept_id': this.receptid,
 				};
@@ -75,7 +120,8 @@
 		created: function () {
 			this.receptid = this.$route.params.id;
 			console.log(this.receptid);
-			this.all();
+			this.Recept();
+			this.Comments();
 		}
 	};
 </script>
@@ -86,10 +132,12 @@
 		width: 70vw;
 		margin: 0 auto;
 	}
-	#avatar{
+
+	#avatar {
 		width: 55px;
 		height: 55px;
 	}
+
 	h1,
 	h2 {
 		font-weight: normal;

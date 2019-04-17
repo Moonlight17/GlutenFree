@@ -3,11 +3,11 @@
 		<!-- <h1>{{list}}</h1> -->
 		<div id="recept" @scroll="onScroll">
 			<div style="padding:0; margin:0;">
-				<div :key="key" v-for="(rec, key) in list" class="card mb-3">
+				<div :key="key" v-for="(rec, key) in list_rec" class="card mb-3">
 					<!-- <img src="..." class="card-img-top" alt="..."> -->
 					<router-link :to="{ name: 'recept', params: { id: rec.id } }" class="card-body" :id="rec.id">
 						<h5 class="card-title">{{rec.title}}</h5>
-						<router-link :to="{ name: 'current_user', params: { id: rec.creater.id } }" class="card-text">{{rec.creater.username}} <img id="avatar" :src="host_url + rec.creater.avatar"></router-link>
+						<router-link :to="{ name: 'current_user', params: { id: rec.user.id } }" class="card-text">{{rec.user.username}} <img id="avatar" :src="host_url + rec.user.avatar"></router-link>
 						<p class="card-text"><small class="text-muted">{{rec.pub_date}}</small></p>
 					</router-link>
 				</div>
@@ -23,7 +23,7 @@
 			return {
 				host_url: "http://127.0.0.1:8000",
 				list_url: "http://127.0.0.1:8000/",
-				list: [],
+				list_rec: [],
 				author: '',
 				loading: false,
 				start: 0,
@@ -52,7 +52,7 @@
 				this.$http.get(this.list_url + this.start + "/").then(
 					function (response) {
 						var list = response.data;
-						this.list = this.list.concat(list.data);
+						this.list_rec = this.list_rec.concat(list.data);
 						this.loading = false;
 					},
 					function (error) {

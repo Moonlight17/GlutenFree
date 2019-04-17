@@ -9,7 +9,7 @@ import json
 from .models import *
 
 
-from .serializers import ListReceptSerializer, AddReceptSerializer, ListCurrentReceptSerializer, TagSerializer, UserSerializer, AddCommentSerializer
+from .serializers import ListReceptSerializer, AddReceptSerializer, ListCurrentReceptSerializer, TagSerializer, UserSerializer, AddCommentSerializer, ListCommentSerializer
 
 
 class ListRecept(APIView):
@@ -63,9 +63,22 @@ class ListCurrentRecept(CreateAPIView):
         recept = Recept.objects.filter(pk=id)
         # print(type(recept['recepts_text']))
         serializer = ListCurrentReceptSerializer(recept, many=True)
-        data = serializer.data[:]
-        # print(type(data['recepts_text']))
-        return Response(data)
+        dataRecept = serializer.data[:]
+        return Response(dataRecept)
+
+
+class ListCurrentComments(CreateAPIView):
+    serializer_class = ListCurrentReceptSerializer(many=True)
+    permission_classes = [permissions.AllowAny, ]
+
+    def get(self, request, id, count):
+        comm = Comment.objects.filter(recept=id).order_by('-pub_date')[count:count + 9]
+        comm_data = ListCommentSerializer(comm, many=True)
+        dataComment = comm_data.data[:]
+        print(dataComment)
+        return Response(dataComment)
+
+
 
 class AddRecept(CreateAPIView):
     permission_classes = [permissions.IsAuthenticated, ] #for avtorise
@@ -78,17 +91,17 @@ class AddRecept(CreateAPIView):
         Text = json.loads(data['Text'])
         Title = data['Title']
         Tag = data['Tag']
-        if ( data['Title'] != '' and data['Text'] != [] and data['Tag'] != []):
+        if ( data['Title'] != '' and data['Text'] != '[]' and data['Tag'] != []):
             Creater = User.objects.get(username=request.user)
             post = Recept()
             post.title = Title
             post.recepts_text = Text
-            post.creater = Creater
+            post.user = Creater
             post.save()
             for select_tag in Tag:
                 print(select_tag)
                 post.tag_name.add(select_tag['id'])
-            rec = Recept.objects.filter(creater=Creater).count()
+            rec = Recept.objects.filter(user=Creater).count()
             print(request.user)
 
             try:

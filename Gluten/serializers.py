@@ -27,19 +27,26 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ListReceptSerializer(serializers.ModelSerializer):
     pub_date = serializers.DateTimeField(format="%Y-%B-%d")
-    creater = UserSerializer()
+    user = UserSerializer()
     tag_name = TagSerializer(many=True,)
     class Meta:
         model = Recept
-        fields = ('id', 'title', 'pub_date', 'creater', 'tag_name')
+        fields = ('id', 'title', 'pub_date', 'user', 'tag_name')
 
 class ListCurrentReceptSerializer(serializers.ModelSerializer):
     pub_date = serializers.DateTimeField(format="%Y-%m-%d   %H:%M:%S")
-    creater = UserSerializer()
+    user = UserSerializer()
     tag_name = TagSerializer(many=True,)
     class Meta:
         model = Recept
-        fields = ('id', 'title', 'recepts_text', 'pub_date', 'creater', 'tag_name')
+        fields = ('id', 'title', 'recepts_text', 'pub_date', 'user', 'tag_name')
+
+class ListCommentSerializer(serializers.ModelSerializer):
+    pub_date = serializers.DateTimeField(format="%Y-%m-%d   %H:%M:%S")
+    user = UserSerializer()
+    class Meta:
+        model = Comment
+        fields = ('id', 'text', 'pub_date', 'user', 'likes')
 
 
 
@@ -53,10 +60,10 @@ class TagSerializer(serializers.ModelSerializer):
 class AddReceptSerializer(serializers.ModelSerializer):
     pub_date = serializers.DateTimeField(format="%Y-%m-%d  %H:%M:%S")
     tag_name = TagSerializer(many=True,)
-    creater = UserSerializer()
+    user = UserSerializer()
     class Meta:
         model = Recept
-        fields = ('id', 'title', 'recepts_text', 'pub_date', 'creater', 'tag_name')
+        fields = ('id', 'title', 'recepts_text', 'pub_date', 'user', 'tag_name')
 
 class AddCommentSerializer(serializers.ModelSerializer):
     recept = ListCurrentReceptSerializer()
