@@ -1,6 +1,5 @@
 <template>
   <div id="login">
-    <img src="./assets/logo.png">
     <h1>{{ msg }}</h1>
     <div>
       <input v-model="Login" placeholder="Login"/>
@@ -33,6 +32,7 @@
         function(response) {
           console.log(response.data.data.attributes.auth_token);
           localStorage.setItem("auth_token", response.data.data.attributes.auth_token)
+          window.location = '/';
         },
         function(error) {
           if (error.status == 400) alert(error.detail)

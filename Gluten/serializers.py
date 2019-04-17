@@ -18,7 +18,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(source='profile.avatar')
-    quantity = serializers.CharField(source='profile.quantity')
+    quantity = serializers.IntegerField(source='profile.quantity')
     username = serializers.CharField()
     class Meta:
         model = Profile
@@ -57,3 +57,11 @@ class AddReceptSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recept
         fields = ('id', 'title', 'recepts_text', 'pub_date', 'creater', 'tag_name')
+
+class AddCommentSerializer(serializers.ModelSerializer):
+    recept = ListCurrentReceptSerializer()
+    pub_date = serializers.DateTimeField(format="%Y-%m-%d  %H:%M:%S")
+    user = UserSerializer()
+    class Meta:
+        model = Recept
+        fields = ('id', 'recept', 'text', 'pub_date', 'user', 'likes')

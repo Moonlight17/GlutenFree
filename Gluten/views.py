@@ -9,7 +9,7 @@ import json
 from .models import *
 
 
-from .serializers import ListReceptSerializer, AddReceptSerializer, ListCurrentReceptSerializer, TagSerializer
+from .serializers import ListReceptSerializer, AddReceptSerializer, ListCurrentReceptSerializer, TagSerializer, UserSerializer, AddCommentSerializer
 
 
 class ListRecept(APIView):
@@ -30,6 +30,26 @@ class TagLoad(APIView):
         tag = Tag.objects.all()
         serializer = TagSerializer(tag, many=True)
         data = serializer.data[:]
+        return Response(data)
+
+
+class UserCurrentLoad(APIView):
+    permission_classes = [permissions.AllowAny, ]
+
+    def get(self, request, id):
+        data = []
+        user = User.objects.get(id=id)
+        serializer = UserSerializer(user)
+        cur_user = serializer.data
+        recepts = Recept.objects.filter(creater_id = user)
+        serializer = ListReceptSerializer(recepts, many=True)
+        recepts = serializer.data
+        data.append(
+			{
+				'user': cur_user,
+				'recepts': recepts
+			}
+        )
         return Response(data)
 
 
@@ -69,16 +89,42 @@ class AddRecept(CreateAPIView):
                 print(select_tag)
                 post.tag_name.add(select_tag['id'])
             rec = Recept.objects.filter(creater=Creater).count()
-            print(rec)
-            Creater.quantity = rec
-            Creater.save()
-            QuaUser = Profile.objects.get(user=request.user)
-            QuaUser.quantity = rec
-            QuaUser.save()
+            print(request.user)
+
+            try:
+                obj = Profile.objects.get(user=request.user)
+            except Profile.DoesNotExist:
+                obj = Profile(user=request.user, avatar='media/default.png', quantity = rec)
+                obj.save()
+            print(obj)
             print("New Recept")
 
         return Response(status=201)
 
+
+class AddComment(CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]  #for avtorise
+    serializer_class = AddCommentSerializer(many=True)
+    model = Comment
+
+    def post(self, request):
+
+        data = json.loads(request.body.decode('utf-8'))
+        Text = data['Text']
+        Recept_id = data['Recept_id']
+        ReceptEntry = Recept.objects.get(id=Recept_id)
+        Creater = User.objects.get(username=request.user)
+        like = Like.objects.filter(recept=ReceptEntry).count()
+        comm = Comment()
+        comm.recept = ReceptEntry
+        comm.text = Text
+        comm.user = Creater
+        comm.likes = like
+        comm.save()
+        
+        print("New Comment")
+
+        return Response(status=201)
 
 
 

@@ -17,12 +17,17 @@
 
 		<nav>
 			<router-link to="/">+ Список</router-link>
-			<router-link to="/login" a>+ Вход</router-link>
-			<router-link to="/registration" a>+ Регистрация</router-link>
-			<router-link to="/add" a>+ Добавить рецепт</router-link>
+			<router-link v-show="tokens == false" to="/login" a>+ Вход</router-link>
+			<router-link v-show="tokens == false" to="/registration" a>+ Регистрация</router-link>
+			<a href="#" v-show="tokens == true" to="/registration" a>+ Я</a>
+			<a href="#" v-show="tokens == true" @click="logout()" a>+ Выход</a>
+
+			<router-link v-show="tokens == true" to="/add" a>+ Добавить рецепт</router-link>
 		</nav>
+		<img src="./src/assets/logo.png">
 		<router-view></router-view>
 	</div>
+
 	<script src="/dist/build.js"></script>
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

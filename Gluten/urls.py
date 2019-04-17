@@ -9,7 +9,9 @@ from django.conf import settings
 urlpatterns = [
     path('<int:count>/', views.ListRecept.as_view(), name='ListRecept'),
     path('tag/', views.TagLoad.as_view(), name='TagLoad'),
+    path('user/<int:id>/', views.UserCurrentLoad.as_view(), name='UserCurrentLoad'),
     path('recept/<int:id>/', views.ListCurrentRecept.as_view(), name='ListCurrentRecept'),
-    path('add/', views.AddRecept.as_view(), name='add'),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('addrecept/', views.AddRecept.as_view(), name='add_recept'),
+    path('addcomment/', views.AddComment.as_view(), name='add_comment'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

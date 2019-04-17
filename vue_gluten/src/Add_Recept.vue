@@ -1,6 +1,5 @@
 <template>
 	<div id="add">
-		<img src="./assets/logo.png">
 		<!-- <h1>{{list}}</h1> -->
 		<div>
 		<input v-model="title">
@@ -31,7 +30,7 @@ export default {
   name: "add",
   data() {
     return {
-      list_url: "http://127.0.0.1:8000/add/",
+      list_url: "http://127.0.0.1:8000/addrecept/",
       title: "",
       text: "",
 	  tags: [],

@@ -1,9 +1,5 @@
 <template>
 	<div id="list">
-
-		<div id="img">
-			<img src="./assets/logo.png">
-		</div>
 		<!-- <h1>{{list}}</h1> -->
 		<div id="recept" @scroll="onScroll">
 			<div style="padding:0; margin:0;">
@@ -11,7 +7,7 @@
 					<!-- <img src="..." class="card-img-top" alt="..."> -->
 					<router-link :to="{ name: 'recept', params: { id: rec.id } }" class="card-body" :id="rec.id">
 						<h5 class="card-title">{{rec.title}}</h5>
-						<p class="card-text">{{rec.creater.username}}</p>
+						<router-link :to="{ name: 'current_user', params: { id: rec.creater.id } }" class="card-text">{{rec.creater.username}} <img id="avatar" :src="host_url + rec.creater.avatar"></router-link>
 						<p class="card-text"><small class="text-muted">{{rec.pub_date}}</small></p>
 					</router-link>
 				</div>
@@ -25,6 +21,7 @@
 		name: "list",
 		data() {
 			return {
+				host_url: "http://127.0.0.1:8000",
 				list_url: "http://127.0.0.1:8000/",
 				list: [],
 				author: '',
@@ -88,13 +85,16 @@
 	#recept {
 		font-family: "Avenir", Helvetica, Arial, sans-serif;
 		width: 70vw;
-		height: 60vh;
+		height: 80vh;
 		margin: 0 auto;
-		margin-top: 30vh;
+		margin-top: 10vh;
 		overflow: scroll;
 
 	}
-
+	img#avatar{
+		height:55px;
+		width:55px;
+	}
 	h1,
 	h2 {
 		font-weight: normal;

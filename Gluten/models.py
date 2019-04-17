@@ -21,7 +21,7 @@ class Tag(models.Model):
 class Profile(models.Model):
 	
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	avatar = models.ImageField(upload_to='media', default='default.png')
+	avatar = models.ImageField(verbose_name="Изображение профиля", upload_to='media', default='‎⁨media/default.png')
 	quantity = models.IntegerField(verbose_name="Количество рецептов", default=0)
 
 	def __str__(self):
@@ -44,10 +44,11 @@ class Recept(models.Model):
 
 # Create your models here.
 class Comment(models.Model):
-	recepts = models.ForeignKey(Recept, default= None, on_delete=models.CASCADE)
+	recept = models.ForeignKey(Recept, default= None, on_delete=models.CASCADE)
 	text = models.CharField(max_length=200, default='Вкуснятина')
-	pub_date = models.DateTimeField(auto_now=True)
+	pub_date = models.DateTimeField(verbose_name="Дата и время публикации", auto_now=True)
 	user = models.ForeignKey(User, verbose_name="Автор", on_delete=models.CASCADE)
+	likes = models.IntegerField(default=0)
 
 	def __str__(self):
 		return self.text
