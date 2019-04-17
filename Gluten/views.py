@@ -114,7 +114,7 @@ class AddComment(CreateAPIView):
         Recept_id = data['Recept_id']
         ReceptEntry = Recept.objects.get(id=Recept_id)
         Creater = User.objects.get(username=request.user)
-        like = Like.objects.filter(recept=ReceptEntry).count()
+        like = LikeRecept.objects.filter(recept=ReceptEntry).count()
         comm = Comment()
         comm.recept = ReceptEntry
         comm.text = Text

@@ -54,7 +54,7 @@ class Comment(models.Model):
 		return self.text
 
 # Create your models here.
-class Like(models.Model):
+class LikeRecept(models.Model):
 	user = models.ForeignKey(User, verbose_name="Автор", on_delete=models.CASCADE)
 	recept = models.ForeignKey(Recept, default= None, on_delete=models.CASCADE)
 	value = models.BooleanField(default= None)
