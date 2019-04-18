@@ -10,12 +10,12 @@
 			</ul>
 			<a v-for="tag in recept.tag_name" href="#" class="badge badge-light">{{tag.name}}</a>
 		</div>
-		<div id="recept" @scroll="onScroll">
+		<div id="comments">
 			<div style="padding:0; margin:0;">
-				<div :key="key" v-for="(rec, key) in list" class="card mb-3">
+				<div :key="key" v-for="(rec, key) in comments" class="card mb-3">
 					<!-- <img src="..." class="card-img-top" alt="..."> -->
 					<div class="card-body" :id="rec.id">
-						<h5 class="card-title">{{rec.title}}</h5>
+						<h6 class="card-title">{{rec.text}}</h6>
 						<router-link :to="{ name: 'current_user', params: { id: rec.user.id } }" class="card-text">
 							{{rec.user.username}} <img id="avatar" :src="host_url + rec.user.avatar">
 						</router-link>
@@ -26,10 +26,12 @@
 		</div>
 		<div v-show="tokens == true" id="comment">
 			<form v-on:submit.prevent="add_comment">
-				<textarea v-model="comment">
-
-				</textarea>
-				<button>Оставить</button>
+				<div class="form-group">
+					<textarea class="form-control" v-model="comment" id="exampleFormControlTextarea1"
+						rows="3"></textarea>
+				</div>
+			</form>
+			<button>Оставить</button>
 			</form>
 		</div>
 	</div>
@@ -49,7 +51,6 @@
 				author: '',
 				receptid: '',
 				comment: '',
-				start: 0,
 				list: [],
 			};
 		},
@@ -74,7 +75,7 @@
 				);
 			},
 			Comments: function () {
-				this.$http.get(this.list_comment_url + this.receptid + "/" + this.start + "/").then(
+				this.$http.get(this.list_comment_url + this.receptid + "/").then(
 					function (response) {
 						var list = response.data;
 						this.comments = this.comments.concat(list.data);
@@ -84,21 +85,6 @@
 						// console.log(error);
 					}
 				);
-			},
-			onScroll: function (event) {
-				var wrapper = event.target,
-					list = wrapper.firstElementChild
-
-				var scrollTop = wrapper.scrollTop,
-					wrapperHeight = wrapper.offsetHeight,
-					listHeight = list.offsetHeight
-
-				var diffheight = listHeight - wrapperHeight;
-				if (diffheight <= scrollTop && !this.loading) {
-					this.start += 9
-					this.Comments();
-				}
-
 			},
 			add_comment: function () {
 
@@ -115,6 +101,8 @@
 						// 'Content-type': 'application/text'
 					}
 				});
+				this.Comments();
+				console.log("OLOLOLO");
 			},
 		},
 		created: function () {
@@ -136,6 +124,28 @@
 	#avatar {
 		width: 55px;
 		height: 55px;
+	}
+
+	#text_comment {
+		width: 70vw;
+
+	}
+	textarea.form-control{
+		margin: 0 auto;
+		margin-top: 2vh;
+		width: 70vw;
+		min-height: 30vh;
+	}
+
+	#comments {
+		font-family: "Avenir", Helvetica, Arial, sans-serif;
+		width: 70vw;
+		/* height: 80vh; */
+		margin: 0 auto;
+		margin-top: 10vh;
+		/* overflow: scroll; */
+
+
 	}
 
 	h1,

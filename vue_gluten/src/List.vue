@@ -7,7 +7,8 @@
 					<!-- <img src="..." class="card-img-top" alt="..."> -->
 					<router-link :to="{ name: 'recept', params: { id: rec.id } }" class="card-body" :id="rec.id">
 						<h5 class="card-title">{{rec.title}}</h5>
-						<router-link :to="{ name: 'current_user', params: { id: rec.user.id } }" class="card-text">{{rec.user.username}} <img id="avatar" :src="host_url + rec.user.avatar"></router-link>
+						<router-link :to="{ name: 'current_user', params: { id: rec.user.id } }" class="card-text">
+							{{rec.user.username}} <img id="avatar" :src="host_url + rec.user.avatar"></router-link>
 						<p class="card-text"><small class="text-muted">{{rec.pub_date}}</small></p>
 					</router-link>
 				</div>
@@ -49,17 +50,37 @@
 			},
 			all: function () {
 				this.loading = true;
-				this.$http.get(this.list_url + this.start + "/").then(
-					function (response) {
-						var list = response.data;
-						this.list_rec = this.list_rec.concat(list.data);
-						this.loading = false;
-					},
-					function (error) {
-						console.log(error);
-						this.loading = false;
-					}
-				);
+				if (!localStorage.getItem("auth_token")) {
+					this.$http.get(this.list_url + this.start + "/").then(
+						function (response) {
+							var list = response.data;
+							this.list_rec = this.list_rec.concat(list.data);
+							this.loading = false;
+						},
+						function (error) {
+							console.log(error);
+							this.loading = false;
+						}
+					);
+				} else {
+					this.$http.get(this.list_url + this.start + "/", {
+						headers: {
+							'Authorization': 'Token ' + localStorage.getItem("auth_token"),
+							// 'Content-type': 'application/text'
+						}
+					})
+						.then(
+							function (response) {
+								var list = response.data;
+								this.list_rec = this.list_rec.concat(list.data);
+								this.loading = false;
+							},
+							function (error) {
+								console.log(error);
+								this.loading = false;
+							}
+						);
+				}
 			},
 		},
 		created: function () {
@@ -91,10 +112,12 @@
 		overflow: scroll;
 
 	}
-	img#avatar{
-		height:55px;
-		width:55px;
+
+	img#avatar {
+		height: 55px;
+		width: 55px;
 	}
+
 	h1,
 	h2 {
 		font-weight: normal;

@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render, redirect
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView, CreateAPIView
+from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework import permissions
 from django.core import serializers
@@ -17,9 +17,16 @@ class ListRecept(APIView):
     permission_classes = [permissions.AllowAny, ]
 
     def get(self, request, count):
-        recepts = Recept.objects.all().order_by('-pub_date')[count:count + 9]
-        serializer = ListReceptSerializer(recepts, many=True)
-        data = serializer.data[:]
+        print(request.user)
+        if request.user.is_authenticated:
+            recepts = LikeRecept.objects.filter(user=request.user)
+            print(recepts)
+            serializer = ListReceptSerializer(recepts, many=True)
+            data = serializer.data[:]
+        else:
+            recepts = Recept.objects.all().order_by('-pub_date')[count:count + 9]
+            serializer = ListReceptSerializer(recepts, many=True)
+            data = serializer.data[:]
         return Response(data)
 
 
@@ -41,7 +48,7 @@ class UserCurrentLoad(APIView):
         user = User.objects.get(id=id)
         serializer = UserSerializer(user)
         cur_user = serializer.data
-        recepts = Recept.objects.filter(creater_id = user)
+        recepts = Recept.objects.filter(user_id = user).order_by('-likes')
         serializer = ListReceptSerializer(recepts, many=True)
         recepts = serializer.data
         data.append(
@@ -61,7 +68,6 @@ class ListCurrentRecept(CreateAPIView):
 
     def get(self, request, id):
         recept = Recept.objects.filter(pk=id)
-        # print(type(recept['recepts_text']))
         serializer = ListCurrentReceptSerializer(recept, many=True)
         dataRecept = serializer.data[:]
         return Response(dataRecept)
@@ -71,11 +77,10 @@ class ListCurrentComments(CreateAPIView):
     serializer_class = ListCurrentReceptSerializer(many=True)
     permission_classes = [permissions.AllowAny, ]
 
-    def get(self, request, id, count):
-        comm = Comment.objects.filter(recept=id).order_by('-pub_date')[count:count + 9]
+    def get(self, request, id):
+        comm = Comment.objects.filter(recept=id).order_by('pub_date')
         comm_data = ListCommentSerializer(comm, many=True)
         dataComment = comm_data.data[:]
-        print(dataComment)
         return Response(dataComment)
 
 
@@ -93,14 +98,14 @@ class AddRecept(CreateAPIView):
         Tag = data['Tag']
         if ( data['Title'] != '' and data['Text'] != '[]' and data['Tag'] != []):
             Creater = User.objects.get(username=request.user)
-            post = Recept()
-            post.title = Title
-            post.recepts_text = Text
-            post.user = Creater
-            post.save()
+            recept = Recept()
+            recept.title = Title
+            recept.recepts_text = Text
+            recept.user = Creater
+            recept.save()
             for select_tag in Tag:
                 print(select_tag)
-                post.tag_name.add(select_tag['id'])
+                recept.tag_name.add(select_tag['id'])
             rec = Recept.objects.filter(user=Creater).count()
             print(request.user)
 

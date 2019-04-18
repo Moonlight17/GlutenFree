@@ -8,13 +8,12 @@ from .models import *
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("id", "username")
+        fields = ('id', 'username')
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ("id", "name")
-
+        fields = ('id', 'name')
 
 class UserSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(source='profile.avatar')
@@ -31,7 +30,7 @@ class ListReceptSerializer(serializers.ModelSerializer):
     tag_name = TagSerializer(many=True,)
     class Meta:
         model = Recept
-        fields = ('id', 'title', 'pub_date', 'user', 'tag_name')
+        fields = ('id', 'title', 'pub_date', 'user', 'tag_name', 'likes')
 
 class ListCurrentReceptSerializer(serializers.ModelSerializer):
     pub_date = serializers.DateTimeField(format="%Y-%m-%d   %H:%M:%S")
@@ -39,7 +38,7 @@ class ListCurrentReceptSerializer(serializers.ModelSerializer):
     tag_name = TagSerializer(many=True,)
     class Meta:
         model = Recept
-        fields = ('id', 'title', 'recepts_text', 'pub_date', 'user', 'tag_name')
+        fields = ('id', 'title', 'recepts_text', 'pub_date', 'user', 'tag_name', 'likes')
 
 class ListCommentSerializer(serializers.ModelSerializer):
     pub_date = serializers.DateTimeField(format="%Y-%m-%d   %H:%M:%S")

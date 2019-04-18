@@ -59,7 +59,17 @@ class LikeRecept(models.Model):
 	recept = models.ForeignKey(Recept, default= None, on_delete=models.CASCADE)
 	value = models.BooleanField(default= None)
 
-	def __unicode__(self):
-		return str(self.id)
+	def __str__(self):
+		return self.recept.title
+
+# Create your models here.
+class LikeComment(models.Model):
+	user = models.ForeignKey(User, verbose_name="Автор", on_delete=models.CASCADE)
+	recept = models.ForeignKey(Recept, default= None, on_delete=models.CASCADE)
+	comment = models.ForeignKey(Comment, default= None, on_delete=models.CASCADE)
+	value = models.BooleanField(default= None)
+
+	def __str__(self):
+		return self.recept.title
 
 

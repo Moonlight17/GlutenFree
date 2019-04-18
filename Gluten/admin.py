@@ -26,6 +26,7 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Recept)
 admin.site.register(Comment)
 admin.site.register(LikeRecept)
+admin.site.register(LikeComment)
 admin.site.register(Tag)
 
 
