@@ -22,7 +22,6 @@
     },
     methods: {
       login: function () { 
-        console.log("OLOLO");
         var data = [];
         var formData = new FormData();
         formData.append('username', this.Login);
@@ -30,9 +29,11 @@
         
         this.$http.post("http://127.0.0.1:8000/auth/token/login", formData).then(
         function(response) {
-          console.log(response.data.data.attributes.auth_token);
-          localStorage.setItem("auth_token", response.data.data.attributes.auth_token)
+          console.log(response);
+          localStorage.setItem("auth_token", response.body.data.attributes.auth_token)
           window.location = '/';
+
+
         },
         function(error) {
           if (error.status == 400) alert(error.detail)
@@ -41,7 +42,9 @@
       );
       }
     },
-    created: function () { }
+    created: function () {
+      
+    }
   };
 </script>
 

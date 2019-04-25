@@ -9,7 +9,7 @@ import json
 from .models import *
 
 
-from .serializers import ListReceptSerializer, AddReceptSerializer, ListCurrentReceptSerializer, TagSerializer, UserSerializer, AddCommentSerializer, ListCommentSerializer
+from .serializers import ListReceptSerializer, AddReceptSerializer, ListCurrentReceptSerializer, TagSerializer, UserSerializer, AddCommentSerializer, ListCommentSerializer, LikeReceptSerializer, ListUserReceptSerializer
 
 
 class ListRecept(APIView):
@@ -18,17 +18,34 @@ class ListRecept(APIView):
 
     def get(self, request, count):
         print(request.user)
+        data = []
         if request.user.is_authenticated:
-            recepts = LikeRecept.objects.filter(user=request.user)
-            print(recepts)
-            serializer = ListReceptSerializer(recepts, many=True)
+            recepts = Recept.objects.all().order_by('-pub_date')[count:count + 9]
+            serializer = ListUserReceptSerializer(recepts, context={'request': request}, many=True)
             data = serializer.data[:]
         else:
             recepts = Recept.objects.all().order_by('-pub_date')[count:count + 9]
-            serializer = ListReceptSerializer(recepts, many=True)
+            serializer = ListReceptSerializer(recepts, context={'request': request}, many=True)
             data = serializer.data[:]
         return Response(data)
 
+
+class Likes_user(APIView):
+    permission_classes = [permissions.IsAuthenticated,]  #for avtorise
+    
+    def get(self, request):
+        recepts = LikeRecept.objects.filter(user = request.user)
+        print(recepts)
+        serializer = LikeReceptSerializer(recepts, many=True)
+        data = serializer.data[:]
+        return Response(data)
+    
+def Users_Like(me, count):
+    recepts = LikeRecept.objects.filter(user = me)
+    print(recepts)
+    serializer = LikeReceptSerializer(recepts, many=True)
+    data = serializer.data[:]
+    return Response(data)
 
 class TagLoad(APIView):
     permission_classes = [permissions.AllowAny, ]
@@ -48,7 +65,7 @@ class UserCurrentLoad(APIView):
         user = User.objects.get(id=id)
         serializer = UserSerializer(user)
         cur_user = serializer.data
-        recepts = Recept.objects.filter(user_id = user).order_by('-likes')
+        recepts = Recept.objects.filter(user_id = user)
         serializer = ListReceptSerializer(recepts, many=True)
         recepts = serializer.data
         data.append(
@@ -144,6 +161,18 @@ class AddComment(CreateAPIView):
 
         return Response(status=201)
 
+class Me(APIView):
+    permission_classes = [permissions.IsAuthenticated, ] #for avtorise
+    serializer_class = UserSerializer(many=True)
+    model = User
 
-
+    def post(self, request):
+        print("--------------------------")
+        print(request.user)
+        user = User.objects.get(username = request.user)
+        serializer = UserSerializer(user)
+        data = serializer.data
+        print(data)
+        print("%%%%%%%%%%%%%%%%%%%%%")
+        return Response(data)
 

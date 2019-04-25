@@ -15,6 +15,7 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
         fields = ('id', 'name')
 
+
 class UserSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(source='profile.avatar')
     quantity = serializers.IntegerField(source='profile.quantity')
@@ -23,11 +24,36 @@ class UserSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ('id', 'username', 'avatar', 'quantity')
 
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recept
+        fields = ('id', 'like')
+
+
+class ListUserReceptSerializer(serializers.ModelSerializer):
+    pub_date = serializers.DateTimeField(format="%Y-%B-%d")
+    user = UserSerializer()
+    tag_name = TagSerializer()
+    like = serializers.SerializerMethodField('has_like')
+    class Meta:
+        model = Recept
+        fields = ('id', 'title', 'pub_date', 'user', 'tag_name', 'likes', 'like')
+        
+    def has_like(self, obj):
+        """Check for whether the visiting user fav'd the story.
+        """
+
+        user = self.context['request'].user
+        recept = obj # the story object
+        # user_like_post = False # False by default
+        return bool(LikeRecept.objects.filter(user=user.id, recept=recept.id)  )
+
+
 
 class ListReceptSerializer(serializers.ModelSerializer):
     pub_date = serializers.DateTimeField(format="%Y-%B-%d")
     user = UserSerializer()
-    tag_name = TagSerializer(many=True,)
+    tag_name = TagSerializer()
     class Meta:
         model = Recept
         fields = ('id', 'title', 'pub_date', 'user', 'tag_name', 'likes')
@@ -38,7 +64,7 @@ class ListCurrentReceptSerializer(serializers.ModelSerializer):
     tag_name = TagSerializer(many=True,)
     class Meta:
         model = Recept
-        fields = ('id', 'title', 'recepts_text', 'pub_date', 'user', 'tag_name', 'likes')
+        fields = ('id', 'title', 'recepts_text', 'pub_date', 'user', 'tag_name', 'like', 'likes')
 
 class ListCommentSerializer(serializers.ModelSerializer):
     pub_date = serializers.DateTimeField(format="%Y-%m-%d   %H:%M:%S")
@@ -71,3 +97,11 @@ class AddCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recept
         fields = ('id', 'recept', 'text', 'pub_date', 'user', 'likes')
+
+
+class LikeReceptSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    recept = ListReceptSerializer()
+    class Meta:
+        model = LikeRecept
+        fields = ('id', 'value', 'user', 'recept')

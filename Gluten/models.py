@@ -27,6 +27,7 @@ class Profile(models.Model):
 	def __str__(self):
 		return self.user.username
 
+
 # Create your models here.
 class Recept(models.Model):
 	title = models.CharField(max_length=200, default='Вкуснятина')
@@ -41,6 +42,14 @@ class Recept(models.Model):
 	def __str__(self):
 		return self.title
 
+# Create your models here.
+class LikeRecept(models.Model):
+	user = models.ForeignKey(User, verbose_name="Автор", on_delete=models.CASCADE)
+	recept = models.ForeignKey(Recept, verbose_name="Рецепт", on_delete=models.CASCADE)
+
+	def __unicode__(self):
+		return str(self.id)
+
 
 # Create your models here.
 class Comment(models.Model):
@@ -52,15 +61,6 @@ class Comment(models.Model):
 
 	def __str__(self):
 		return self.text
-
-# Create your models here.
-class LikeRecept(models.Model):
-	user = models.ForeignKey(User, verbose_name="Автор", on_delete=models.CASCADE)
-	recept = models.ForeignKey(Recept, default= None, on_delete=models.CASCADE)
-	value = models.BooleanField(default= None)
-
-	def __str__(self):
-		return self.recept.title
 
 # Create your models here.
 class LikeComment(models.Model):

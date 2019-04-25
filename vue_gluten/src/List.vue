@@ -8,8 +8,11 @@
 					<router-link :to="{ name: 'recept', params: { id: rec.id } }" class="card-body" :id="rec.id">
 						<h5 class="card-title">{{rec.title}}</h5>
 						<router-link :to="{ name: 'current_user', params: { id: rec.user.id } }" class="card-text">
-							{{rec.user.username}} <img id="avatar" :src="host_url + rec.user.avatar"></router-link>
-						<p class="card-text"><small class="text-muted">{{rec.pub_date}}</small></p>
+							{{rec.user.username}} <img id="avatar" :src="rec.user.avatar"></router-link>
+						<p class="card-text"><small class="text-muted">{{rec.pub_date}}</small>
+							<svgimg name="svg-ExistsLike" />
+						</p>
+
 					</router-link>
 				</div>
 			</div>
@@ -18,6 +21,7 @@
 </template>
 
 <script>
+	import svgIcon from './svg.vue'
 	export default {
 		name: "list",
 		data() {
@@ -32,6 +36,9 @@
 		},
 		mounted() {
 		},
+		components: {
+    		'svgimg': svgIcon
+  		},
 		methods: {
 			onScroll: function (event) {
 				var wrapper = event.target,
@@ -106,9 +113,9 @@
 	#recept {
 		font-family: "Avenir", Helvetica, Arial, sans-serif;
 		width: 70vw;
-		height: 80vh;
+		height: 78vh;
 		margin: 0 auto;
-		margin-top: 10vh;
+		margin-top: 1vh;
 		overflow: scroll;
 
 	}

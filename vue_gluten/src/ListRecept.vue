@@ -31,7 +31,7 @@
 						rows="3"></textarea>
 				</div>
 			</form>
-			<button>Оставить</button>
+			<button @click="add_comment">Оставить</button>
 			</form>
 		</div>
 	</div>
@@ -78,7 +78,7 @@
 				this.$http.get(this.list_comment_url + this.receptid + "/").then(
 					function (response) {
 						var list = response.data;
-						this.comments = this.comments.concat(list.data);
+						this.comments = list.data;
 						this.loading = false;
 					},
 					function (error) {
@@ -100,9 +100,19 @@
 						'Authorization': 'Token ' + localStorage.getItem("auth_token"),
 						// 'Content-type': 'application/text'
 					}
-				});
-				this.Comments();
-				console.log("OLOLOLO");
+				}).then(
+							function (response) {
+								this.comment = '';
+								this.Comments();
+								console.log("OLOLOLO");
+								this.loading = false;
+							},
+							function (error) {
+								console.log(error);
+								this.loading = false;
+							}
+						);;
+				
 			},
 		},
 		created: function () {
