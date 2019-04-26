@@ -9,7 +9,7 @@ import json
 from .models import *
 
 
-from .serializers import ListReceptSerializer, AddReceptSerializer, ListCurrentReceptSerializer, TagSerializer, UserSerializer, AddCommentSerializer, ListCommentSerializer, LikeReceptSerializer, ListUserReceptSerializer
+from .serializers import ListReceptSerializer, AddReceptSerializer, ListCurrentReceptSerializer, TagSerializer, UserSerializer, AddCommentSerializer, ListCommentSerializer, ListUserReceptSerializer
 
 # отображение всех записей
 class ListRecept(APIView):
@@ -33,10 +33,8 @@ class ListRecept(APIView):
 class Likes_user(APIView):
     permission_classes = [permissions.IsAuthenticated,]  #for avtorise
     
-    def get(self, request, id):
-        recept = LikeRecept.objects.filter(recept=id)
-        serializer = LikeReceptSerializer(recept, context={'request': request}, many=True)
-        dataRecept = serializer.data[:]
+    def post(self, request):
+
 
         return Response(dataRecept)
         

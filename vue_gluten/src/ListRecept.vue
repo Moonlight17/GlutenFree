@@ -10,7 +10,7 @@
 			</ul>
 			<a v-for="tag in recept.tag_name" href="#" class="badge badge-light">{{tag.name}}</a>
 			<p>
-				<svgimg @click="" v-if="recept.like" name="svg-ExistsLike" />
+				<svgimg @click="deleteLike()" v-if="recept.like" name="svg-ExistsLike" />
 				<svgimg @click="" v-else-if="!recept.like" name="svg-NoneLike" />
 			</p>
 		</div>
@@ -54,6 +54,7 @@
 				list_url: "http://127.0.0.1:8000/recept/",
 				list_comment_url: "http://127.0.0.1:8000/comments/",
 				comm_url: "http://127.0.0.1:8000/addcomment/",
+				like_url: "http://127.0.0.1:8000/like/",
 				recept: [],
 				comments: [],
 				author: '',
@@ -125,9 +126,27 @@
 								console.log(error);
 								this.loading = false;
 							}
-						);;
+						);
 				
 			},
+			deleteLike: function(){
+				this.$http.post(this.like_url, NewCommentData, {
+					headers: {
+						'Authorization': 'Token ' + localStorage.getItem("auth_token"),
+						// 'Content-type': 'application/text'
+					}
+				}).then(
+					function (response) {
+						this.comment = '';
+						this.Comments();
+						this.loading = false;
+					},
+					function (error) {
+						console.log(error);
+						this.loading = false;
+					}
+				);
+			}
 		},
 		created: function () {
 			this.receptid = this.$route.params.id;

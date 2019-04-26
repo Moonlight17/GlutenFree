@@ -24,12 +24,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ('id', 'username', 'avatar', 'quantity')
 
-class LikeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Recept
-        fields = ('id', 'like')
-
-
 class ListUserReceptSerializer(serializers.ModelSerializer):
     pub_date = serializers.DateTimeField(format="%Y-%B-%d")
     user = UserSerializer()
@@ -108,11 +102,3 @@ class AddCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recept
         fields = ('id', 'recept', 'text', 'pub_date', 'user', 'likes')
-
-
-class LikeReceptSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
-    recept = ListReceptSerializer()
-    class Meta:
-        model = LikeRecept
-        fields = ('id', 'user', 'recept')
