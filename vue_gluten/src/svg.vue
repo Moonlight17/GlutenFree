@@ -27,6 +27,8 @@
     margin-left: 84%;
     width: 50px;
     height: 50px;
+    transition-property: color;
+    transition: .5s;
 }
 #NoneLikeBorder{
     fill:none;
@@ -38,6 +40,9 @@
 }
 #NoneLikeBody{
     fill:white
+}
+#NoneLikeBody:hover{
+    fill:rgb(255, 208, 94);
 }
 #NoneLikeTop{
     fill:none;
@@ -66,6 +71,12 @@
     margin-left: 84%;
     width: 50px;
     height: 50px;
+    transition: .5s;
+}
+#ExistsLike:hover{
+    -webkit-transform: scale(2);
+    -ms-ransform: scale(2);
+    transform: scale(2);
 }
 #ExistsLikeBorder{
     fill:none;

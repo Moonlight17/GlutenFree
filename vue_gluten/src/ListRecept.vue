@@ -2,24 +2,28 @@
 	<div id="gluten">
 		<div>
 			<h5 class="card-title">{{recept.title}}</h5>
-			<router-link :to="{ name: 'current_user', params: { id: author.id } }" class="card-text">{{author.username}}
-				<img id="avatar" :src="host_url + author.avatar"></router-link>
+			<router-link :to="{ name: 'CurrentUser', params: { id: author['id'] } }" class="card-text">{{author.username}}
+				<img id="avatar" :src="author.avatar"></router-link>
 			<!-- <p class="card-text">{{author.username}} <img :src="host_url+author.avatar"></p> -->
 			<ul class="card-text">
 				<li v-for="rec in recept.recepts_text">{{rec.title}}</li>
 			</ul>
 			<a v-for="tag in recept.tag_name" href="#" class="badge badge-light">{{tag.name}}</a>
+			<p>
+				<svgimg @click="" v-if="recept.like" name="svg-ExistsLike" />
+				<svgimg @click="" v-else-if="!recept.like" name="svg-NoneLike" />
+			</p>
 		</div>
 		<div id="comments">
 			<div style="padding:0; margin:0;">
-				<div :key="key" v-for="(rec, key) in comments" class="card mb-3">
+				<div :key="key" v-for="(com, key) in comments" class="card mb-3">
 					<!-- <img src="..." class="card-img-top" alt="..."> -->
-					<div class="card-body" :id="rec.id">
-						<h6 class="card-title">{{rec.text}}</h6>
-						<router-link :to="{ name: 'current_user', params: { id: rec.user.id } }" class="card-text">
-							{{rec.user.username}} <img id="avatar" :src="host_url + rec.user.avatar">
+					<div class="card-body" :id="com.id">
+						<h6 class="card-title">{{com.text}}</h6>
+						<router-link :to="{ name: 'CurrentUser', params: { id: com.user['id'] } }" class="card-text">
+							{{com.user.username}} <img id="avatar" :src="host_url + com.user.avatar">
 						</router-link>
-						<p class="card-text"><small class="text-muted">{{rec.pub_date}}</small></p>
+						<p class="card-text"><small class="text-muted">{{com.pub_date}}</small></p>
 					</div>
 				</div>
 			</div>
@@ -38,8 +42,12 @@
 </template>
 
 <script>
+	import svgIcon from './svg.vue'
 	export default {
 		name: "Recept",
+		components: {
+    		'svgimg': svgIcon
+  		},
 		data() {
 			return {
 				host_url: "http://127.0.0.1:8000",
@@ -51,7 +59,6 @@
 				author: '',
 				receptid: '',
 				comment: '',
-				list: [],
 			};
 		},
 		computed: {
@@ -64,7 +71,12 @@
 		},
 		methods: {
 			Recept: function () {
-				this.$http.get(this.list_url + this.receptid + "/").then(
+				this.$http.get(this.list_url + this.receptid + "/", {
+						headers: {
+							'Authorization': 'Token ' + localStorage.getItem("auth_token"),
+							// 'Content-type': 'application/text'
+						}
+					}).then(
 					function (response) {
 						this.recept = response.data.data[0];
 						this.author = this.recept['user'];
@@ -75,7 +87,12 @@
 				);
 			},
 			Comments: function () {
-				this.$http.get(this.list_comment_url + this.receptid + "/").then(
+				this.$http.get(this.list_comment_url + this.receptid + "/", {
+						headers: {
+							'Authorization': 'Token ' + localStorage.getItem("auth_token"),
+							// 'Content-type': 'application/text'
+						}
+					}).then(
 					function (response) {
 						var list = response.data;
 						this.comments = list.data;
@@ -93,8 +110,6 @@
 					'Text': this.comment,
 					'Recept_id': this.receptid,
 				};
-				console.log("------------------------------");
-				console.log(NewCommentData);
 				this.$http.post(this.comm_url, NewCommentData, {
 					headers: {
 						'Authorization': 'Token ' + localStorage.getItem("auth_token"),
@@ -104,7 +119,6 @@
 							function (response) {
 								this.comment = '';
 								this.Comments();
-								console.log("OLOLOLO");
 								this.loading = false;
 							},
 							function (error) {
@@ -117,7 +131,6 @@
 		},
 		created: function () {
 			this.receptid = this.$route.params.id;
-			console.log(this.receptid);
 			this.Recept();
 			this.Comments();
 		}

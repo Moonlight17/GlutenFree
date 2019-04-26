@@ -2,8 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
 import List from './List.vue'
-import User from './User.vue'
-import ListRecept from './ListRecept.vue'
+import CurrentUser from './User.vue'
+import CurrentRecept from './ListRecept.vue'
 import Login from './Login.vue'
 import Registration from './Registration.vue'
 import Add_Recept from './Add_Recept.vue'
@@ -19,8 +19,8 @@ Vue.use(VueResource)
 const router = new VueRouter({
   routes: [
     { path: '/', name:'all', component: List },
-    { path: '/recept/:id', name:'recept', component: ListRecept },
-    { path: '/user/:id', name:'current_user', component: User },
+    { path: '/recept/:id', name:'CurrentRecept', component: CurrentRecept },
+    { path: '/user/:id', name:'CurrentUser', component: CurrentUser },
     { path: '/login', component: Login },
     { path: '/registration', component: Registration },
     { path: '/add', component: Add_Recept },
@@ -36,7 +36,7 @@ new Vue({
   data: {
 	  token: false,
 	  user_url: 'http://127.0.0.1:8000/me/',
-	  user: [],
+    user: '',
   },
   components: {
     'svgimg': svgIcon
@@ -62,11 +62,10 @@ new Vue({
 				'Authorization': 'Token ' + localStorage.getItem("auth_token"),
 			}
 		})
-			.then(function (response) {
-			localStorage.setItem("auth_user", response.data.data.attributes.username)
-			console.log(response.data.data.attributes.username);
-			this.user = response.data;
-			console.log("response.data");
+      .then(function (response) {
+        
+        localStorage.setItem("auth_user", response.data.data.attributes.username)
+        this.user = localStorage.getItem("auth_user")
 		})
 		.catch(function (error) {
 			console.log(error);

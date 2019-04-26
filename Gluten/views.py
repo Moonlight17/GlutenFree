@@ -11,7 +11,7 @@ from .models import *
 
 from .serializers import ListReceptSerializer, AddReceptSerializer, ListCurrentReceptSerializer, TagSerializer, UserSerializer, AddCommentSerializer, ListCommentSerializer, LikeReceptSerializer, ListUserReceptSerializer
 
-
+# отображение всех записей
 class ListRecept(APIView):
     # permission_classes = [permissions.IsAuthenticated, ] #for avtorise
     permission_classes = [permissions.AllowAny, ]
@@ -29,24 +29,18 @@ class ListRecept(APIView):
             data = serializer.data[:]
         return Response(data)
 
-
+# функция для добавления лайков
 class Likes_user(APIView):
     permission_classes = [permissions.IsAuthenticated,]  #for avtorise
     
-    def get(self, request):
-        recepts = LikeRecept.objects.filter(user = request.user)
-        print(recepts)
-        serializer = LikeReceptSerializer(recepts, many=True)
-        data = serializer.data[:]
-        return Response(data)
-    
-def Users_Like(me, count):
-    recepts = LikeRecept.objects.filter(user = me)
-    print(recepts)
-    serializer = LikeReceptSerializer(recepts, many=True)
-    data = serializer.data[:]
-    return Response(data)
+    def get(self, request, id):
+        recept = LikeRecept.objects.filter(recept=id)
+        serializer = LikeReceptSerializer(recept, context={'request': request}, many=True)
+        dataRecept = serializer.data[:]
 
+        return Response(dataRecept)
+        
+# подгрузка тэгов
 class TagLoad(APIView):
     permission_classes = [permissions.AllowAny, ]
 
@@ -56,7 +50,7 @@ class TagLoad(APIView):
         data = serializer.data[:]
         return Response(data)
 
-
+# информация об определенном пользователе
 class UserCurrentLoad(APIView):
     permission_classes = [permissions.AllowAny, ]
 
@@ -78,18 +72,22 @@ class UserCurrentLoad(APIView):
 
 
 
-
+# информация об определенном рецепте
 class ListCurrentRecept(CreateAPIView):
     serializer_class = ListCurrentReceptSerializer(many=True)
     permission_classes = [permissions.AllowAny, ]
 
     def get(self, request, id):
-        recept = Recept.objects.filter(pk=id)
-        serializer = ListCurrentReceptSerializer(recept, many=True)
-        dataRecept = serializer.data[:]
+        print(request.user)
+        dataRecept = []
+        if request.user.is_authenticated:
+            recept = Recept.objects.filter(pk=id)
+            serializer = ListCurrentReceptSerializer(recept, context={'request': request}, many=True)
+            dataRecept = serializer.data[:]
+
         return Response(dataRecept)
 
-
+# подгрузка всех комментариев к рецепту
 class ListCurrentComments(CreateAPIView):
     serializer_class = ListCurrentReceptSerializer(many=True)
     permission_classes = [permissions.AllowAny, ]
@@ -101,7 +99,7 @@ class ListCurrentComments(CreateAPIView):
         return Response(dataComment)
 
 
-
+# добавление рецепта
 class AddRecept(CreateAPIView):
     permission_classes = [permissions.IsAuthenticated, ] #for avtorise
     serializer_class = AddReceptSerializer(many=True)
@@ -136,7 +134,7 @@ class AddRecept(CreateAPIView):
 
         return Response(status=201)
 
-
+# добавление комментария к рецепту
 class AddComment(CreateAPIView):
     permission_classes = [permissions.IsAuthenticated,]  #for avtorise
     serializer_class = AddCommentSerializer(many=True)
@@ -161,6 +159,7 @@ class AddComment(CreateAPIView):
 
         return Response(status=201)
 
+# Предполагается, что это будет функция настроек пользователя
 class Me(APIView):
     permission_classes = [permissions.IsAuthenticated, ] #for avtorise
     serializer_class = UserSerializer(many=True)

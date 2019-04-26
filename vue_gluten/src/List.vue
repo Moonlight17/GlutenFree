@@ -5,12 +5,12 @@
 			<div style="padding:0; margin:0;">
 				<div :key="key" v-for="(rec, key) in list_rec" class="card mb-3">
 					<!-- <img src="..." class="card-img-top" alt="..."> -->
-					<router-link :to="{ name: 'recept', params: { id: rec.id } }" class="card-body" :id="rec.id">
+					<router-link :to="{ name: 'CurrentRecept', params: { id: rec.id } }" class="card-body" :id="rec.id">
 						<h5 class="card-title">{{rec.title}}</h5>
-						<router-link :to="{ name: 'current_user', params: { id: rec.user.id } }" class="card-text">
+						<router-link :to="{ name: 'CurrentUser', params: { id: rec.user.id } }" class="card-text">
 							{{rec.user.username}} <img id="avatar" :src="rec.user.avatar"></router-link>
 						<p class="card-text"><small class="text-muted">{{rec.pub_date}}</small>
-							<svgimg name="svg-ExistsLike" />
+							<svgimg v-if="rec.like" name="svg-ExistsLike" />
 						</p>
 
 					</router-link>
