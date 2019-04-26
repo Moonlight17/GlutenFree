@@ -49,6 +49,9 @@ class LikeRecept(models.Model):
 
 	def __unicode__(self):
 		return str(self.id)
+	
+	def __str__(self):
+		return self.user.username + ' ' + self.recept.title
 
 
 # Create your models here.

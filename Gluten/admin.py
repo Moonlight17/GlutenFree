@@ -20,12 +20,15 @@ admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 
 
+class LikeReceptAdmin(admin.ModelAdmin):
+    """Диалоги"""
+    list_display = ("user", "recept")
 
+admin.site.register(LikeRecept, LikeReceptAdmin)
 
 # admin.site.register(Profile)
 admin.site.register(Recept)
 admin.site.register(Comment)
-admin.site.register(LikeRecept)
 admin.site.register(LikeComment)
 admin.site.register(Tag)
 

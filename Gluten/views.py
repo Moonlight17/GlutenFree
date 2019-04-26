@@ -33,10 +33,15 @@ class ListRecept(APIView):
 class Likes_user(APIView):
     permission_classes = [permissions.IsAuthenticated,]  #for avtorise
     
-    def post(self, request):
-
-
-        return Response(dataRecept)
+    def get(self, request, id):
+        print(request.user)
+        obj, created = LikeRecept.objects.get_or_create(user=request.user, recept_id=id)
+        print(obj)
+        print(created)
+        if (not created):
+            obj.delete()
+        data = []
+        return Response(data)
         
 # подгрузка тэгов
 class TagLoad(APIView):

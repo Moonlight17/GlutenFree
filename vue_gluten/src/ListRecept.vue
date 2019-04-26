@@ -9,9 +9,9 @@
 				<li v-for="rec in recept.recepts_text">{{rec.title}}</li>
 			</ul>
 			<a v-for="tag in recept.tag_name" href="#" class="badge badge-light">{{tag.name}}</a>
-			<p>
-				<svgimg @click="deleteLike()" v-if="recept.like" name="svg-ExistsLike" />
-				<svgimg @click="" v-else-if="!recept.like" name="svg-NoneLike" />
+			<p @click="deleteLike()">
+				<svgimg  v-if="recept.like" name="svg-ExistsLike" />
+				<svgimg  v-else-if="!recept.like" name="svg-NoneLike" />
 			</p>
 		</div>
 		<div id="comments">
@@ -57,37 +57,44 @@
 				like_url: "http://127.0.0.1:8000/like/",
 				recept: [],
 				comments: [],
+				user: false,
 				author: '',
 				receptid: '',
 				comment: '',
+				loading: false,
 			};
 		},
 		computed: {
 			tokens() {
 				if (localStorage.getItem("auth_token"))
-					return true
+					{this.user = true
+					return true}
 				else
-					return false
+					{this.user = false
+					return false}
 			}
 		},
 		methods: {
 			Recept: function () {
-				this.$http.get(this.list_url + this.receptid + "/", {
-						headers: {
-							'Authorization': 'Token ' + localStorage.getItem("auth_token"),
-							// 'Content-type': 'application/text'
+				if (!this.loading){
+					this.$http.get(this.list_url + this.receptid + "/", {
+							headers: {
+								'Authorization': 'Token ' + localStorage.getItem("auth_token"),
+								// 'Content-type': 'application/text'
+							}
+						}).then(
+						function (response) {
+							this.recept = response.data.data[0];
+							this.author = this.recept['user'];
+						},
+						function (error) {
+							// console.log(error);
 						}
-					}).then(
-					function (response) {
-						this.recept = response.data.data[0];
-						this.author = this.recept['user'];
-					},
-					function (error) {
-						// console.log(error);
-					}
-				);
+					)
+				};
 			},
 			Comments: function () {
+				if (!this.loading){
 				this.$http.get(this.list_comment_url + this.receptid + "/", {
 						headers: {
 							'Authorization': 'Token ' + localStorage.getItem("auth_token"),
@@ -102,7 +109,8 @@
 					function (error) {
 						// console.log(error);
 					}
-				);
+				)};
+				
 			},
 			add_comment: function () {
 
@@ -111,6 +119,7 @@
 					'Text': this.comment,
 					'Recept_id': this.receptid,
 				};
+				if (!this.loading){
 				this.$http.post(this.comm_url, NewCommentData, {
 					headers: {
 						'Authorization': 'Token ' + localStorage.getItem("auth_token"),
@@ -126,19 +135,22 @@
 								console.log(error);
 								this.loading = false;
 							}
-						);
+						)}else{
+							alert("проблемы со связью");
+						};
 				
 			},
 			deleteLike: function(){
-				this.$http.post(this.like_url, NewCommentData, {
+
+				if (!this.loading &&  this.user){
+				this.$http.get(this.like_url + this.receptid + "/", {
 					headers: {
 						'Authorization': 'Token ' + localStorage.getItem("auth_token"),
 						// 'Content-type': 'application/text'
 					}
 				}).then(
 					function (response) {
-						this.comment = '';
-						this.Comments();
+						this.recept.like = !this.recept.like;
 						this.loading = false;
 					},
 					function (error) {
@@ -146,6 +158,7 @@
 						this.loading = false;
 					}
 				);
+				}
 			}
 		},
 		created: function () {

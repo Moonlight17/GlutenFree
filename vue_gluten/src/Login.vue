@@ -2,9 +2,11 @@
   <div id="login">
     <h1>{{ msg }}</h1>
     <div>
-      <input v-model="Login" placeholder="Login"/>
-      <input v-model="Password" placeholder="Password"/>
-      <button @click="login()">Вход</button>
+      <form v-on:submit.prevent="login">
+        <input v-model="Login" placeholder="Login"/>
+        <input v-model="Password" placeholder="Password"/>
+        <button>Вход</button>
+      </form>
     </div>
     <!-- <h1>{{list}}</h1> -->
   </div>
