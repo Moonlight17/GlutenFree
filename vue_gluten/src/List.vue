@@ -63,6 +63,7 @@
 							var list = response.data;
 							this.list_rec = this.list_rec.concat(list.data);
 							this.loading = false;
+							console.log("------------------------");
 						},
 						function (error) {
 							console.log(error);

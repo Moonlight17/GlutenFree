@@ -9,7 +9,7 @@ import json
 from .models import *
 
 
-from .serializers import ListReceptSerializer, AddReceptSerializer, ListCurrentReceptSerializer, TagSerializer, UserSerializer, AddCommentSerializer, ListCommentSerializer, ListUserReceptSerializer
+from .serializers import ListReceptSerializer, AddReceptSerializer, ListCurrentReceptSerializer, AuthListCurrentReceptSerializer, TagSerializer, UserSerializer, AddCommentSerializer, AuthListCommentSerializer, ListCommentSerializer, ListUserReceptSerializer, ImageReceptSerializer
 
 # отображение всех записей
 class ListRecept(APIView):
@@ -17,32 +17,55 @@ class ListRecept(APIView):
     permission_classes = [permissions.AllowAny, ]
 
     def get(self, request, count):
-        print(request.user)
+        # print(request.user)
         data = []
         if request.user.is_authenticated:
             recepts = Recept.objects.all().order_by('-pub_date')[count:count + 9]
             serializer = ListUserReceptSerializer(recepts, context={'request': request}, many=True)
             data = serializer.data[:]
+            Creater = User.objects.get(username=request.user)
+            rec = Recept.objects.filter(user=Creater).count()
+            try:
+                obj = Profile.objects.get(user=request.user)
+            except Profile.DoesNotExist:
+                obj = Profile(user=request.user, avatar='media/default.png', quantity = rec)
+                obj.save()
         else:
             recepts = Recept.objects.all().order_by('-pub_date')[count:count + 9]
             serializer = ListReceptSerializer(recepts, context={'request': request}, many=True)
             data = serializer.data[:]
+            # print(data)
         return Response(data)
 
-# функция для добавления лайков
-class Likes_user(APIView):
+# функция для добавления лайков на рецепты
+class LikeRec(APIView):
     permission_classes = [permissions.IsAuthenticated,]  #for avtorise
     
     def get(self, request, id):
-        print(request.user)
+        # print(request.user)
         obj, created = LikeRecept.objects.get_or_create(user=request.user, recept_id=id)
-        print(obj)
-        print(created)
+        # print(obj)
+        # print(created)
         if (not created):
             obj.delete()
         data = []
         return Response(data)
-        
+
+# функция для добавления лайков на рецепты
+
+class LikeComm(APIView):
+    permission_classes = [permissions.IsAuthenticated,]  #for avtorise
+    
+    def get(self, request, id, comm_id):
+        # print(request.user)
+        obj, created = LikeComment.objects.get_or_create(user=request.user, recept_id=id, comment_id = comm_id)
+        # print(obj)
+        # print(created)
+        if (not created):
+            obj.delete()
+        data = []
+        return Response(data)
+
 # подгрузка тэгов
 class TagLoad(APIView):
     permission_classes = [permissions.AllowAny, ]
@@ -76,8 +99,7 @@ class UserCurrentLoad(APIView):
 
 
 # информация об определенном рецепте
-class ListCurrentRecept(CreateAPIView):
-    serializer_class = ListCurrentReceptSerializer(many=True)
+class ListCurrentRecept(APIView):
     permission_classes = [permissions.AllowAny, ]
 
     def get(self, request, id):
@@ -85,20 +107,37 @@ class ListCurrentRecept(CreateAPIView):
         dataRecept = []
         if request.user.is_authenticated:
             recept = Recept.objects.filter(pk=id)
-            serializer = ListCurrentReceptSerializer(recept, context={'request': request}, many=True)
+            serializer = AuthListCurrentReceptSerializer(recept, context={'request': request}, many=True)
             dataRecept = serializer.data[:]
-
+        else:
+            recepts = Recept.objects.filter(pk=id)
+            serializer = ListCurrentReceptSerializer(recepts, many=True)
+            dataRecept = serializer.data[:]
+            # print(dataRecept)
+        recept = Gallery.objects.filter(recept=id)
+        serializer = ImageReceptSerializer(recept, many=True)
+        dataImage = serializer.data[:]
+        # print(dataRecept)
+        # dataRecept.append(dataImage)
         return Response(dataRecept)
 
 # подгрузка всех комментариев к рецепту
-class ListCurrentComments(CreateAPIView):
-    serializer_class = ListCurrentReceptSerializer(many=True)
+class ListCurrentComments(APIView):
     permission_classes = [permissions.AllowAny, ]
 
     def get(self, request, id):
-        comm = Comment.objects.filter(recept=id).order_by('pub_date')
-        comm_data = ListCommentSerializer(comm, many=True)
-        dataComment = comm_data.data[:]
+
+
+        if request.user.is_authenticated:
+            comm = Comment.objects.filter(recept=id).order_by('pub_date')
+            comm_data = AuthListCommentSerializer(comm, context={'request': request}, many=True)
+            dataComment = comm_data.data[:]
+            print("TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        else:
+            comm = Comment.objects.filter(recept=id).order_by('pub_date')
+            comm_data = ListCommentSerializer(comm, many=True)
+            dataComment = comm_data.data[:]
+
         return Response(dataComment)
 
 
@@ -112,28 +151,30 @@ class AddRecept(CreateAPIView):
         
         data = json.loads(request.body.decode('utf-8'))
         Text = json.loads(data['Text'])
+        Comp = json.loads(data['Comp'])
         Title = data['Title']
         Tag = data['Tag']
-        if ( data['Title'] != '' and data['Text'] != '[]' and data['Tag'] != []):
+        if ( data['Title'] != '' and data['Comp'] != '[]' and data['Text'] != '[]' and data['Tag'] != []):
             Creater = User.objects.get(username=request.user)
             recept = Recept()
             recept.title = Title
-            recept.recepts_text = Text
+            recept.comp = Comp
+            recept.text = Text
             recept.user = Creater
             recept.save()
             for select_tag in Tag:
-                print(select_tag)
+                # print(select_tag)
                 recept.tag_name.add(select_tag['id'])
             rec = Recept.objects.filter(user=Creater).count()
-            print(request.user)
+            # print(request.user)
 
             try:
                 obj = Profile.objects.get(user=request.user)
             except Profile.DoesNotExist:
                 obj = Profile(user=request.user, avatar='media/default.png', quantity = rec)
                 obj.save()
-            print(obj)
-            print("New Recept")
+            # print(obj)
+            # print("New Recept")
 
         return Response(status=201)
 
@@ -144,20 +185,20 @@ class AddComment(CreateAPIView):
     model = Comment
 
     def post(self, request):
-
         data = json.loads(request.body.decode('utf-8'))
-        Text = data['Text']
-        Recept_id = data['Recept_id']
-        ReceptEntry = Recept.objects.get(id=Recept_id)
-        Creater = User.objects.get(username=request.user)
-        like = LikeRecept.objects.filter(recept=ReceptEntry).count()
-        comm = Comment()
-        comm.recept = ReceptEntry
-        comm.text = Text
-        comm.user = Creater
-        comm.likes = like
-        comm.save()
-        
+        if ( data['Text'] != '' and data['Recept_id'] != ''):
+            Text = data['Text']
+            Recept_id = data['Recept_id']
+            ReceptEntry = Recept.objects.get(id=Recept_id)
+            Creater = User.objects.get(username=request.user)
+            like = LikeRecept.objects.filter(recept=ReceptEntry).count()
+            comm = Comment()
+            comm.recept = ReceptEntry
+            comm.text = Text
+            comm.user = Creater
+            comm.likes = like
+            comm.save()
+            
         print("New Comment")
 
         return Response(status=201)
@@ -169,12 +210,12 @@ class Me(APIView):
     model = User
 
     def post(self, request):
-        print("--------------------------")
-        print(request.user)
+        # print("--------------------------")
+        # print(request.user)
         user = User.objects.get(username = request.user)
         serializer = UserSerializer(user)
         data = serializer.data
         print(data)
-        print("%%%%%%%%%%%%%%%%%%%%%")
+        # print("%%%%%%%%%%%%%%%%%%%%%")
         return Response(data)
 

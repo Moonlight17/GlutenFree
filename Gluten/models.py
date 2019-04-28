@@ -31,7 +31,8 @@ class Profile(models.Model):
 # Create your models here.
 class Recept(models.Model):
 	title = models.CharField(max_length=200, default='Вкуснятина')
-	recepts_text = JSONField()
+	comp = JSONField()
+	text = JSONField()
 	pub_date = models.DateTimeField(verbose_name="Дата и время публикации",auto_now=True)
 	user = models.ForeignKey(User, verbose_name="Автор", on_delete=models.CASCADE)
 	tag_name = models.ManyToManyField(Tag)
@@ -41,6 +42,10 @@ class Recept(models.Model):
 
 	def __str__(self):
 		return self.title
+
+class Gallery(models.Model):
+    image = models.ImageField(upload_to='Recepts')
+    recept = models.ForeignKey(Recept, on_delete=models.CASCADE, related_name='images')
 
 # Create your models here.
 class LikeRecept(models.Model):
@@ -70,7 +75,6 @@ class LikeComment(models.Model):
 	user = models.ForeignKey(User, verbose_name="Автор", on_delete=models.CASCADE)
 	recept = models.ForeignKey(Recept, default= None, on_delete=models.CASCADE)
 	comment = models.ForeignKey(Comment, default= None, on_delete=models.CASCADE)
-	value = models.BooleanField(default= None)
 
 	def __str__(self):
 		return self.recept.title

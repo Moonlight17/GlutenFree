@@ -143,6 +143,7 @@ STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, 'media'),
 # )
 
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAdminUser',

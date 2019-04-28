@@ -3,13 +3,17 @@
 		<div>
 			<h5 class="card-title">{{recept.title}}</h5>
 			<router-link :to="{ name: 'CurrentUser', params: { id: author['id'] } }" class="card-text">{{author.username}}
-				<img id="avatar" :src="author.avatar"></router-link>
+				<img id="avatar" :src="host_url + author.avatar"></router-link>
 			<!-- <p class="card-text">{{author.username}} <img :src="host_url+author.avatar"></p> -->
 			<ul class="card-text">
-				<li v-for="rec in recept.recepts_text">{{rec.title}}</li>
+				<li v-for="rec in recept.text">{{rec.title}}</li>
+			</ul>
+			------------------------------------------------------
+			<ul class="card-text">
+				<li v-for="rec in recept.comp">{{rec.title}}</li>
 			</ul>
 			<a v-for="tag in recept.tag_name" href="#" class="badge badge-light">{{tag.name}}</a>
-			<p @click="deleteLike()">
+			<p @click="Like()">
 				<svgimg  v-if="recept.like" name="svg-ExistsLike" />
 				<svgimg  v-else-if="!recept.like" name="svg-NoneLike" />
 			</p>
@@ -21,12 +25,17 @@
 					<div class="card-body" :id="com.id">
 						<h6 class="card-title">{{com.text}}</h6>
 						<router-link :to="{ name: 'CurrentUser', params: { id: com.user['id'] } }" class="card-text">
-							{{com.user.username}} <img id="avatar" :src="host_url + com.user.avatar">
+							{{com.user.username}} <img id="avatar" :src="com.user.avatar">
 						</router-link>
 						<p class="card-text"><small class="text-muted">{{com.pub_date}}</small></p>
 					</div>
+					<p @click="LikeComm(com.id, key)">
+						<svgimg  v-if="com.like" name="svg-ExistsLike" />
+						<svgimg  v-else-if="!com.like" name="svg-NoneLike" />
+					</p>
 				</div>
 			</div>
+
 		</div>
 		<div v-show="tokens == true" id="comment">
 			<form v-on:submit.prevent="add_comment">
@@ -35,7 +44,7 @@
 						rows="3"></textarea>
 				</div>
 			</form>
-			<button @click="add_comment">Оставить</button>
+			<button v-show="com" @click="add_comment">Оставить</button>
 			</form>
 		</div>
 	</div>
@@ -72,44 +81,73 @@
 				else
 					{this.user = false
 					return false}
+			},
+			com(){
+				return this.comment.length
 			}
 		},
 		methods: {
 			Recept: function () {
 				if (!this.loading){
-					this.$http.get(this.list_url + this.receptid + "/", {
+					if(localStorage.getItem("auth_token"))
+						{this.$http.get(this.list_url + this.receptid + "/", {
+								headers: {
+									'Authorization': 'Token ' + localStorage.getItem("auth_token"),
+								}
+							}).then(
+							function (response) {
+								console.log("------------------------");
+								this.recept = response.data.data[0];
+								this.author = this.recept['user'];
+							},
+							function (error) {
+								// console.log(error);
+							}
+						)}else{
+							this.$http.get(this.list_url + this.receptid + "/").then(
+								function (response) {
+								console.log("NOOOOOOO------------------------");
+									this.recept = response.data.data[0];
+									this.author = this.recept['user'];
+								},
+								function (error) {
+									// console.log(error);
+								}
+							)
+						}
+				};
+			},
+			Comments: function () {
+				if (!this.loading){
+					if(localStorage.getItem("auth_token")){
+						this.$http.get(this.list_comment_url + this.receptid + "/", {
 							headers: {
 								'Authorization': 'Token ' + localStorage.getItem("auth_token"),
 								// 'Content-type': 'application/text'
 							}
 						}).then(
-						function (response) {
-							this.recept = response.data.data[0];
-							this.author = this.recept['user'];
-						},
-						function (error) {
-							// console.log(error);
+							function (response) {
+								var list = response.data;
+								this.comments = list.data;
+								this.loading = false;
+							},
+							function (error) {
+								// console.log(error);
 						}
-					)
-				};
-			},
-			Comments: function () {
-				if (!this.loading){
-				this.$http.get(this.list_comment_url + this.receptid + "/", {
-						headers: {
-							'Authorization': 'Token ' + localStorage.getItem("auth_token"),
-							// 'Content-type': 'application/text'
+						)
+					}else{
+						this.$http.get(this.list_comment_url + this.receptid + "/").then(
+							function (response) {
+								var list = response.data;
+								this.comments = list.data;
+								this.loading = false;
+							},
+							function (error) {
+								// console.log(error);
 						}
-					}).then(
-					function (response) {
-						var list = response.data;
-						this.comments = list.data;
-						this.loading = false;
-					},
-					function (error) {
-						// console.log(error);
+						)
 					}
-				)};
+				};
 				
 			},
 			add_comment: function () {
@@ -128,21 +166,21 @@
 				}).then(
 							function (response) {
 								this.comment = '';
-								this.Comments();
 								this.loading = false;
+								this.Comments();
 							},
 							function (error) {
 								console.log(error);
 								this.loading = false;
 							}
 						)}else{
-							alert("проблемы со связью");
+							alert("Проблемы со связью");
 						};
 				
 			},
-			deleteLike: function(){
+			Like: function(){
 
-				if (!this.loading &&  this.user){
+				if (!this.loading && this.user){
 				this.$http.get(this.like_url + this.receptid + "/", {
 					headers: {
 						'Authorization': 'Token ' + localStorage.getItem("auth_token"),
@@ -151,6 +189,26 @@
 				}).then(
 					function (response) {
 						this.recept.like = !this.recept.like;
+						this.loading = false;
+					},
+					function (error) {
+						console.log(error);
+						this.loading = false;
+					}
+				);
+				}
+			},
+			LikeComm: function(id, key){
+
+				if (!this.loading && this.user){
+				this.$http.get(this.like_url + this.receptid + "/" + id + "/", {
+					headers: {
+						'Authorization': 'Token ' + localStorage.getItem("auth_token"),
+						// 'Content-type': 'application/text'
+					}
+				}).then(
+					function (response) {
+						this.comments[key].like = !this.comments[key].like;
 						this.loading = false;
 					},
 					function (error) {

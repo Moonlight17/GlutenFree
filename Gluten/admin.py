@@ -27,7 +27,16 @@ class LikeReceptAdmin(admin.ModelAdmin):
 admin.site.register(LikeRecept, LikeReceptAdmin)
 
 # admin.site.register(Profile)
-admin.site.register(Recept)
+class ReceptInline(admin.TabularInline):
+    fk_name = 'recept'
+    model = Gallery
+
+
+@admin.register(Recept)
+class ReceptAdmin(admin.ModelAdmin):
+    inlines = [ReceptInline,]
+
+# admin.site.register(Recept)
 admin.site.register(Comment)
 admin.site.register(LikeComment)
 admin.site.register(Tag)

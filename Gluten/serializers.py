@@ -15,6 +15,12 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
         fields = ('id', 'name')
 
+class ImageReceptSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField()
+    class Meta:
+        model = Gallery
+        fields = ('id', 'image')
+
 
 class UserSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(source='profile.avatar')
@@ -56,19 +62,26 @@ class ListCurrentReceptSerializer(serializers.ModelSerializer):
     pub_date = serializers.DateTimeField(format="%Y-%m-%d   %H:%M:%S")
     user = UserSerializer()
     tag_name = TagSerializer(many=True,)
+    class Meta:
+        model = Recept
+        fields = ('id', 'title', 'comp', 'text', 'pub_date', 'user', 'tag_name', 'likes')
+
+class AuthListCurrentReceptSerializer(serializers.ModelSerializer):
+    pub_date = serializers.DateTimeField(format="%Y-%m-%d   %H:%M:%S")
+    user = UserSerializer()
+    tag_name = TagSerializer(many=True,)
     like = serializers.SerializerMethodField('has_like')
     class Meta:
         model = Recept
-        fields = ('id', 'title', 'recepts_text', 'pub_date', 'user', 'tag_name', 'like', 'likes')
+        fields = ('id', 'title', 'comp', 'text', 'pub_date', 'user', 'tag_name', 'like', 'likes')
 
     def has_like(self, obj):
         """Check for whether the visiting user fav'd the story.
         """
-
         user = self.context['request'].user
         recept = obj # the story object
         # user_like_post = False # False by default
-        return bool(LikeRecept.objects.filter(user=user.id, recept=recept.id)  )
+        return bool(LikeRecept.objects.filter(user=user.id, recept=recept.id))
 
 
 class ListCommentSerializer(serializers.ModelSerializer):
@@ -78,6 +91,22 @@ class ListCommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ('id', 'text', 'pub_date', 'user', 'likes')
 
+class AuthListCommentSerializer(serializers.ModelSerializer):
+    pub_date = serializers.DateTimeField(format="%Y-%m-%d   %H:%M:%S")
+    user = UserSerializer()
+    like = serializers.SerializerMethodField('has_like')
+    class Meta:
+        model = Comment
+        fields = ('id', 'text', 'pub_date', 'user', 'likes', 'like')
+
+    def has_like(self, obj):
+        """Check for whether the visiting user fav'd the story.
+        """
+
+        user = self.context['request'].user
+        comm = obj # the story object
+        # user_like_post = False # False by default
+        return bool(LikeComment.objects.filter(user=user.id, recept=comm.recept, comment=comm.id))
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -93,7 +122,7 @@ class AddReceptSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     class Meta:
         model = Recept
-        fields = ('id', 'title', 'recepts_text', 'pub_date', 'user', 'tag_name')
+        fields = ('id', 'title', 'comp', 'text', 'pub_date', 'user', 'tag_name')
 
 class AddCommentSerializer(serializers.ModelSerializer):
     recept = ListCurrentReceptSerializer()
