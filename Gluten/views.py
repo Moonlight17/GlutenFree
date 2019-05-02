@@ -117,8 +117,8 @@ class ListCurrentRecept(APIView):
         recept = Gallery.objects.filter(recept=id)
         serializer = ImageReceptSerializer(recept, many=True)
         dataImage = serializer.data[:]
-        # print(dataRecept)
-        # dataRecept.append(dataImage)
+        # print(dataImage)
+        dataRecept.append(dataImage)
         return Response(dataRecept)
 
 # подгрузка всех комментариев к рецепту
@@ -132,7 +132,6 @@ class ListCurrentComments(APIView):
             comm = Comment.objects.filter(recept=id).order_by('pub_date')
             comm_data = AuthListCommentSerializer(comm, context={'request': request}, many=True)
             dataComment = comm_data.data[:]
-            print("TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         else:
             comm = Comment.objects.filter(recept=id).order_by('pub_date')
             comm_data = ListCommentSerializer(comm, many=True)
@@ -148,7 +147,7 @@ class AddRecept(CreateAPIView):
     model = Recept
 
     def post(self, request):
-        
+        Recept_ID = []
         data = json.loads(request.body.decode('utf-8'))
         Text = json.loads(data['Text'])
         Comp = json.loads(data['Comp'])
@@ -162,6 +161,8 @@ class AddRecept(CreateAPIView):
             recept.text = Text
             recept.user = Creater
             recept.save()
+            Recept_ID.append(recept.id)
+            print(recept.id)
             for select_tag in Tag:
                 # print(select_tag)
                 recept.tag_name.add(select_tag['id'])
@@ -175,6 +176,22 @@ class AddRecept(CreateAPIView):
                 obj.save()
             # print(obj)
             # print("New Recept")
+
+        return Response(Recept_ID)
+# добавление фото к рецепту
+class AddReceptPhoto(APIView):
+    permission_classes = [permissions.IsAuthenticated, ] #for avtorise
+    def post(self, request):
+        files = request.FILES.getlist('files')
+        print(request.user)
+        rec = Recept.objects.filter(user=request.user).order_by('-id')[0]
+        if (files != []):
+            print(files)
+            for file in files:
+                gal = Gallery()
+                gal.recept = rec
+                gal.image = file
+                gal.save()
 
         return Response(status=201)
 

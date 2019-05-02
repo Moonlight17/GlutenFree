@@ -21,10 +21,17 @@ admin.site.register(User, UserAdmin)
 
 
 class LikeReceptAdmin(admin.ModelAdmin):
-    """Диалоги"""
+    """Лайки Рецептов"""
     list_display = ("user", "recept")
 
 admin.site.register(LikeRecept, LikeReceptAdmin)
+
+class LikeCommentAdmin(admin.ModelAdmin):
+    """Лайки Комментариев"""
+    list_display = ("user", "recept", "comment")
+
+admin.site.register(LikeComment, LikeCommentAdmin)
+
 
 # admin.site.register(Profile)
 class ReceptInline(admin.TabularInline):
@@ -38,7 +45,6 @@ class ReceptAdmin(admin.ModelAdmin):
 
 # admin.site.register(Recept)
 admin.site.register(Comment)
-admin.site.register(LikeComment)
 admin.site.register(Tag)
 
 

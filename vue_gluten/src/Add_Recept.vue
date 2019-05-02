@@ -6,7 +6,7 @@
 				<input class="form-control" v-model="title">
 				<form v-on:submit.prevent="addNewPart">
 					<label for="new-part">Добавить часть рецепта</label>
-					<textarea class="form-control" v-model="newPartText" id="new-part" placeholder="смешать что-то с чем-то и получить еще что-то"></textarea>
+					<input class="form-control" v-model="newPartText" id="new-part" placeholder="смешать что-то с чем-то и получить еще что-то"/>
 					<button>Добавить</button>
 				</form>
 				<ul>
@@ -29,6 +29,7 @@
 				<select class="form-control" multiple v-model="SelectTag">
 					<option v-for="(tag, index) in tags" :value="tag">{{tag.name}}</option>
 				</select>
+				<input autocomplete="off" type="file" id="my_file" ref="files" name="file" @change="handleFilesUploads" class="archive" multiple />
 				<button @click="submit()">Отправить</button>
 			</div>
 		</div>
@@ -40,7 +41,7 @@ export default {
 	name: "add",
 	data() {
 		return {
-			list_url: "http://127.0.0.1:8000/addrecept/",
+			add_url: "http://127.0.0.1:8000/addrecept/",
 			title: "",
 			text: "",
 			tags: [],
@@ -51,6 +52,7 @@ export default {
 			part: [],
 			nextCompId: 1,
 			nextPartId: 1,
+			files: [],
 		};
 	},
 	methods: {
@@ -73,12 +75,41 @@ export default {
 			NewReceptData = {
 				Title: this.title,
 				Comp: JSON.stringify(this.comp),
-				Text: JSON.stringify(this.comp),
+				Text: JSON.stringify(this.part),
 				Tag: this.SelectTag
 			};
 			console.log(NewReceptData);
 			this.$http
-				.post(this.list_url, NewReceptData, {
+				.post(this.add_url, NewReceptData, {
+					headers: {
+						Authorization: "Token " + localStorage.getItem("auth_token")
+						// 'Content-type': 'application/text'
+					}
+				})
+				.then(
+					function(response) {
+						var id = response.data.data;
+						this.submitFile(id);
+						this.loading = false;
+						// window.location = '/';
+					},
+					function(error) {
+						console.log(error);
+						this.loading = false;
+					}
+				);
+		},
+		submitFile: function(id) {
+			let NewReceptPhoto = new FormData();
+			for (var i = 0; i < this.files.length; i++) {
+				let file = this.files[i];
+				
+				NewReceptPhoto.append('files', file);
+			}
+			NewReceptPhoto.append('id', id);
+			console.log(NewReceptPhoto);
+			this.$http
+				.post(this.add_url + "photo/", NewReceptPhoto, {
 					headers: {
 						Authorization: "Token " + localStorage.getItem("auth_token")
 						// 'Content-type': 'application/text'
@@ -106,7 +137,13 @@ export default {
 					this.loading = false;
 				}
 			);
-		}
+		},
+		handleFilesUploads() {
+			let uploadedFiles = this.$refs.files.files;
+			for (var i = 0; i < uploadedFiles.length; i++) {
+				this.files.push(uploadedFiles[i]);
+			}
+		},
 	},
 	created: function() {
 		this.tag();

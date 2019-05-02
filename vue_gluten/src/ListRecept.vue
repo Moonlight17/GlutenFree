@@ -5,13 +5,15 @@
 			<router-link :to="{ name: 'CurrentUser', params: { id: author['id'] } }" class="card-text">{{author.username}}
 				<img id="avatar" :src="host_url + author.avatar"></router-link>
 			<!-- <p class="card-text">{{author.username}} <img :src="host_url+author.avatar"></p> -->
-			<ul class="card-text">
-				<li v-for="rec in recept.text">{{rec.title}}</li>
-			</ul>
-			------------------------------------------------------
-			<ul class="card-text">
-				<li v-for="rec in recept.comp">{{rec.title}}</li>
-			</ul>
+			<div>
+				<ul class="border card-text">
+					<li class="text" v-for="rec in recept.text"><span>{{rec.title}}</span></li>
+				</ul>
+				------------------------------------------------------
+				<ul class="border card-text">
+					<li class="text" v-for="rec in recept.comp"><span>{{rec.title}}</span></li>
+				</ul>
+			</div>
 			<a v-for="tag in recept.tag_name" href="#" class="badge badge-light">{{tag.name}}</a>
 			<p @click="Like()">
 				<svgimg  v-if="recept.like" name="svg-ExistsLike" />
@@ -96,7 +98,7 @@
 								}
 							}).then(
 							function (response) {
-								console.log("------------------------");
+								console.log(response.data.data)
 								this.recept = response.data.data[0];
 								this.author = this.recept['user'];
 							},
@@ -106,7 +108,6 @@
 						)}else{
 							this.$http.get(this.list_url + this.receptid + "/").then(
 								function (response) {
-								console.log("NOOOOOOO------------------------");
 									this.recept = response.data.data[0];
 									this.author = this.recept['user'];
 								},
@@ -266,16 +267,34 @@
 		font-weight: normal;
 	}
 
-	ul {
-		list-style-type: none;
+	.border {
+		list-style: none;
 		padding: 0;
 	}
-
-	li {
-		display: inline-block;
-		margin: 0 10px;
+	.border li.text {
+		font-family: "Trebuchet MS", "Lucida Sans";
+		padding: 7px 20px;
+		margin-bottom: 10px;
+		border-radius: 5px;
+		border-left: 10px solid #f05d22; 
+		box-shadow: 2px -2px 5px 0 rgba(0,0,0,.1),
+			-2px -2px 5px 0 rgba(0,0,0,.1),
+			2px 2px 5px 0 rgba(0,0,0,.1),
+			-2px 2px 5px 0 rgba(0,0,0,.1);
+		font-size: 20px;
+		letter-spacing: 2px;
+		transition: 0.3s all linear;
 	}
-
+	.border li.text:nth-child(2){border-color: #8bc63e;}
+	.border li.text:nth-child(3){border-color: #fcba30;}
+	.border li.text:nth-child(4){border-color: #1ccfc9;}
+	.border li.text:nth-child(5){border-color: #493224;}
+	.border li.text:hover {border-left: 10px solid transparent;}
+	.border li.text:nth-child(1):hover {border-right: 10px solid #f05d22;}
+	.border li.text:nth-child(2):hover {border-right: 10px solid #8bc63e;}
+	.border li.text:nth-child(3):hover {border-right: 10px solid #fcba30;}
+	.border li.text:nth-child(4):hover {border-right: 10px solid #1ccfc9;}
+	.border li.text:nth-child(5):hover {border-right: 10px solid #493224;}
 	a {
 		color: #42b983;
 	}
