@@ -1,6 +1,10 @@
 <template>
 	<div id="gluten">
 		<div>
+			<div id="images">
+				<span  v-for="image in recept.images"><img id="img" :src="host_url + image"></span>
+				
+			</div>
 			<h5 class="card-title">{{recept.title}}</h5>
 			<router-link :to="{ name: 'CurrentUser', params: { id: author['id'] } }" class="card-text">{{author.username}}
 				<img id="avatar" :src="host_url + author.avatar"></router-link>
@@ -229,6 +233,13 @@
 </script>
 
 <style>
+	#img{
+		margin-right: 50px;
+		border:  3px solid #42b983;
+		width: 300px;
+		max-height: 230px;
+		margin-bottom:50px;
+	}
 	#recept {
 		font-family: "Avenir", Helvetica, Arial, sans-serif;
 		width: 70vw;

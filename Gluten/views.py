@@ -23,8 +23,6 @@ class ListRecept(APIView):
             recepts = Recept.objects.all().order_by('-pub_date')[count:count + 9]
             serializer = ListUserReceptSerializer(recepts, context={'request': request}, many=True)
             data = serializer.data[:]
-            Creater = User.objects.get(username=request.user)
-            rec = Recept.objects.filter(user=Creater).count()
             try:
                 obj = Profile.objects.get(user=request.user)
             except Profile.DoesNotExist:
@@ -141,18 +139,22 @@ class ListCurrentComments(APIView):
 
 
 # добавление рецепта
-class AddRecept(CreateAPIView):
+class AddRecept(APIView):
     permission_classes = [permissions.IsAuthenticated, ] #for avtorise
     serializer_class = AddReceptSerializer(many=True)
     model = Recept
 
     def post(self, request):
         Recept_ID = []
-        data = json.loads(request.body.decode('utf-8'))
-        Text = json.loads(data['Text'])
-        Comp = json.loads(data['Comp'])
-        Title = data['Title']
-        Tag = data['Tag']
+        # data = json.loads(request.body.decode('utf-8'))
+        # Text = json.loads(data['Text'])
+        # Comp = json.loads(data['Comp'])
+        # Title = data['Title']
+        # Tag = data['Tag']
+        
+        files = request.FILES.getlist('files')
+        print(files)
+
         if ( data['Title'] != '' and data['Comp'] != '[]' and data['Text'] != '[]' and data['Tag'] != []):
             Creater = User.objects.get(username=request.user)
             recept = Recept()
@@ -162,12 +164,18 @@ class AddRecept(CreateAPIView):
             recept.user = Creater
             recept.save()
             Recept_ID.append(recept.id)
-            print(recept.id)
+            print(type(recept.text))
             for select_tag in Tag:
                 # print(select_tag)
                 recept.tag_name.add(select_tag['id'])
             rec = Recept.objects.filter(user=Creater).count()
             # print(request.user)
+
+            # files = request.FILES['file']
+            # files = request.FILES.getlist('files')
+            # print(files)
+
+
 
             try:
                 obj = Profile.objects.get(user=request.user)
@@ -232,7 +240,7 @@ class Me(APIView):
         user = User.objects.get(username = request.user)
         serializer = UserSerializer(user)
         data = serializer.data
-        print(data)
+        # print(data)
         # print("%%%%%%%%%%%%%%%%%%%%%")
         return Response(data)
 

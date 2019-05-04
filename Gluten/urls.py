@@ -6,6 +6,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
 
 
+
 urlpatterns = [
     path('<int:count>/', views.ListRecept.as_view(), name='ListRecept'),
     path('tag/', views.TagLoad.as_view(), name='TagLoad'),

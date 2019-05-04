@@ -4,12 +4,6 @@ from django.contrib.auth.models import User
 from .models import *
 
 
-
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'username')
-
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
@@ -62,18 +56,33 @@ class ListCurrentReceptSerializer(serializers.ModelSerializer):
     pub_date = serializers.DateTimeField(format="%Y-%m-%d   %H:%M:%S")
     user = UserSerializer()
     tag_name = TagSerializer(many=True,)
+    images = serializers.SerializerMethodField('has_image')
     class Meta:
         model = Recept
-        fields = ('id', 'title', 'comp', 'text', 'pub_date', 'user', 'tag_name', 'likes')
+        fields = ('id', 'title', 'comp', 'text', 'pub_date', 'user', 'tag_name', 'likes', 'images')
+
+    def has_image(self, obj):
+        """Check for whether the visiting user fav'd the story.
+        """
+
+        recept = obj  # the story object
+        img_url = []
+        # user_like_post = False # False by default
+        images = Gallery.objects.filter(recept=recept.id)
+        for image in images:
+            img_url.append(image.image.url)
+        return img_url
+
 
 class AuthListCurrentReceptSerializer(serializers.ModelSerializer):
     pub_date = serializers.DateTimeField(format="%Y-%m-%d   %H:%M:%S")
     user = UserSerializer()
     tag_name = TagSerializer(many=True,)
     like = serializers.SerializerMethodField('has_like')
+    images = serializers.SerializerMethodField('has_image')
     class Meta:
         model = Recept
-        fields = ('id', 'title', 'comp', 'text', 'pub_date', 'user', 'tag_name', 'like', 'likes')
+        fields = ('id', 'title', 'comp', 'text', 'pub_date', 'user', 'tag_name', 'like', 'likes', 'images')
 
     def has_like(self, obj):
         """Check for whether the visiting user fav'd the story.
@@ -82,6 +91,20 @@ class AuthListCurrentReceptSerializer(serializers.ModelSerializer):
         recept = obj # the story object
         # user_like_post = False # False by default
         return bool(LikeRecept.objects.filter(user=user.id, recept=recept.id))
+
+    def has_image(self, obj):
+        """Check for whether the visiting user fav'd the story.
+        """
+
+        recept = obj  # the story object
+        img_url = []
+        # user_like_post = False # False by default
+        images = Gallery.objects.filter(recept=recept.id)
+        for image in images:
+            img_url.append(image.image.url)
+        return img_url
+    
+
 
 
 class ListCommentSerializer(serializers.ModelSerializer):

@@ -3,23 +3,22 @@
 		<!-- <h1>{{list}}</h1> -->
 		<div>
 			<div id="comp-list-example">
+				<!-- <form enctype="multipart/form-data"> -->
 				<input class="form-control" v-model="title">
-				<form v-on:submit.prevent="addNewPart">
 					<label for="new-part">Добавить часть рецепта</label>
-					<input class="form-control" v-model="newPartText" id="new-part" placeholder="смешать что-то с чем-то и получить еще что-то"/>
-					<button>Добавить</button>
-				</form>
+					<input @keyup.enter="addNewPart" class="form-control" v-model="newPartText" id="new-part" placeholder="смешать что-то с чем-то и получить еще что-то"/>
+					<button @click="addNewPart" >Добавить</button>
 				<ul>
 					<li v-for="(part, index) in part" :key="part.id">
 						{{ part.title }}
 						<button @click="part.splice(index, 1)">Удалить</button>
 					</li>
 				</ul>
-				<form v-on:submit.prevent="addNewComp">
+
 					<label for="new-comp">Добавить компонент</label>
-					<input class="form-control" v-model="newCompText" id="new-comp" placeholder="Сметана - 100 г">
-					<button>Добавить</button>
-				</form>
+					<input @keyup.enter="addNewComp" class="form-control" v-model="newCompText" id="new-comp" placeholder="Сметана - 100 г">
+					<button @click="addNewComp">Добавить</button>
+				<!-- </form> -->
 				<ul>
 					<li v-for="(comp, index) in comp" :key="comp.id">
 						{{ comp.title }}
@@ -29,7 +28,11 @@
 				<select class="form-control" multiple v-model="SelectTag">
 					<option v-for="(tag, index) in tags" :value="tag">{{tag.name}}</option>
 				</select>
-				<input autocomplete="off" type="file" id="my_file" ref="files" name="file" @change="handleFilesUploads" class="archive" multiple />
+				<input autocomplete="off" type="file" id="my_file" ref="files" name="file"  class="archive" />
+				<div v-for="image in images" id="image">
+					<img :src="image" alt="image" id="output">
+				</div>
+				<!-- </form> -->
 				<button @click="submit()">Отправить</button>
 			</div>
 		</div>
@@ -53,15 +56,18 @@ export default {
 			nextCompId: 1,
 			nextPartId: 1,
 			files: [],
+			images: [],
 		};
 	},
 	methods: {
 		addNewPart: function() {
 			this.part.push({
 				id: this.nextPartId++,
-				title: this.newPartText
+				title: this.newPartText,
 			});
+			this.files.push(this.$refs.files.files[0]);
 			this.newPartText = "";
+			document.getElementById("my_file").value = "";
 		},
 		addNewComp: function() {
 			this.comp.push({
@@ -76,20 +82,22 @@ export default {
 				Title: this.title,
 				Comp: JSON.stringify(this.comp),
 				Text: JSON.stringify(this.part),
-				Tag: this.SelectTag
+				Tag: this.SelectTag,
+				File: this.files
 			};
 			console.log(NewReceptData);
 			this.$http
 				.post(this.add_url, NewReceptData, {
 					headers: {
-						Authorization: "Token " + localStorage.getItem("auth_token")
+						Authorization: "Token " + localStorage.getItem("auth_token"),
 						// 'Content-type': 'application/text'
+						// ContentType: 'multipart/form-data'
 					}
 				})
 				.then(
 					function(response) {
 						var id = response.data.data;
-						this.submitFile(id);
+						// this.submitFile(id);
 						this.loading = false;
 						// window.location = '/';
 					},
@@ -142,6 +150,8 @@ export default {
 			let uploadedFiles = this.$refs.files.files;
 			for (var i = 0; i < uploadedFiles.length; i++) {
 				this.files.push(uploadedFiles[i]);
+				this.images.push(URL.createObjectURL(event.target.files[i]));
+				console.log(URL.createObjectURL(event.target.files[i]));
 			}
 		},
 	},
@@ -159,6 +169,11 @@ export default {
 	text-align: center;
 	color: #2c3e50;
 	margin-top: 60px;
+}
+#image img{
+	margin-top: 50px;
+	width: 200px;
+	height: 200px;
 }
 
 h1,
