@@ -1,5 +1,6 @@
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render, redirect
+from rest_framework.parsers import MultiPartParser
 from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
@@ -140,21 +141,21 @@ class ListCurrentComments(APIView):
 
 # добавление рецепта
 class AddRecept(APIView):
-    permission_classes = [permissions.IsAuthenticated, ] #for avtorise
-    serializer_class = AddReceptSerializer(many=True)
-    model = Recept
+    permission_classes = [permissions.IsAuthenticated,]  #for avtorise
+    parser_classes = (MultiPartParser,)
+    # serializer_class = AddReceptSerializer(many=True)
+    # model = Recept
 
     def post(self, request):
         Recept_ID = []
-        # data = json.loads(request.body.decode('utf-8'))
-        # Text = json.loads(data['Text'])
-        # Comp = json.loads(data['Comp'])
-        # Title = data['Title']
-        # Tag = data['Tag']
-        
-        files = request.FILES.getlist('files')
-        print(files)
+        data = json.loads(request.body.decode('utf-8'))
+        Text = json.loads(data['Text'])
+        Comp = json.loads(data['Comp'])
+        Title = data['Title']
+        Tag = data['Tag']
+        print(str(request.META['CONTENT_TYPE']))
 
+        
         if ( data['Title'] != '' and data['Comp'] != '[]' and data['Text'] != '[]' and data['Tag'] != []):
             Creater = User.objects.get(username=request.user)
             recept = Recept()
@@ -164,19 +165,10 @@ class AddRecept(APIView):
             recept.user = Creater
             recept.save()
             Recept_ID.append(recept.id)
-            print(type(recept.text))
+            # print(type(recept.text))
             for select_tag in Tag:
-                # print(select_tag)
                 recept.tag_name.add(select_tag['id'])
             rec = Recept.objects.filter(user=Creater).count()
-            # print(request.user)
-
-            # files = request.FILES['file']
-            # files = request.FILES.getlist('files')
-            # print(files)
-
-
-
             try:
                 obj = Profile.objects.get(user=request.user)
             except Profile.DoesNotExist:

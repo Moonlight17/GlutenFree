@@ -238,7 +238,7 @@
 		border:  3px solid #42b983;
 		width: 300px;
 		max-height: 230px;
-		margin-bottom:50px;
+		/* margin-bottom:50px; */
 	}
 	#recept {
 		font-family: "Avenir", Helvetica, Arial, sans-serif;
