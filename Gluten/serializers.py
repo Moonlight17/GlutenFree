@@ -16,6 +16,26 @@ class ImageReceptSerializer(serializers.ModelSerializer):
         fields = ('id', 'image')
 
 
+class MeUserSerializer(serializers.ModelSerializer):
+    avatar = serializers.ImageField(source='profile.avatar')
+    quantity = serializers.IntegerField(source='profile.quantity')
+    username = serializers.CharField()
+    finish = serializers.SerializerMethodField('completed_registration')
+    class Meta:
+        model = Profile
+        fields = ('id', 'username', 'avatar', 'quantity', 'finish')
+
+    def completed_registration(self, obj):
+        """Check for whether the visiting user fav'd the story.
+        """
+
+        users = self.context['request'].user
+        user = Profile.objects.get(user=users.id).user
+        reg = bool(user.email) and bool(user.first_name) and bool(user.last_name)
+        # recept = obj # the story object
+        # user_like_post = False # False by default
+        return reg
+
 class UserSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(source='profile.avatar')
     quantity = serializers.IntegerField(source='profile.quantity')
@@ -23,6 +43,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('id', 'username', 'avatar', 'quantity')
+        
 
 class ListUserReceptSerializer(serializers.ModelSerializer):
     pub_date = serializers.DateTimeField(format="%Y-%B-%d")
@@ -37,10 +58,10 @@ class ListUserReceptSerializer(serializers.ModelSerializer):
         """Check for whether the visiting user fav'd the story.
         """
 
-        user = self.context['request'].user
+        users = self.context['request'].user
         recept = obj # the story object
         # user_like_post = False # False by default
-        return bool(LikeRecept.objects.filter(user=user.id, recept=recept.id)  )
+        return bool(LikeRecept.objects.filter(user=users.id, recept=recept.id)  )
 
 
 
@@ -87,10 +108,10 @@ class AuthListCurrentReceptSerializer(serializers.ModelSerializer):
     def has_like(self, obj):
         """Check for whether the visiting user fav'd the story.
         """
-        user = self.context['request'].user
+        users = self.context['request'].user
         recept = obj # the story object
         # user_like_post = False # False by default
-        return bool(LikeRecept.objects.filter(user=user.id, recept=recept.id))
+        return bool(LikeRecept.objects.filter(user=users.id, recept=recept.id))
 
     def has_image(self, obj):
         """Check for whether the visiting user fav'd the story.

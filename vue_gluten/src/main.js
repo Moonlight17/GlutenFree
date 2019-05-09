@@ -35,8 +35,10 @@ new Vue({
   name: "index",
   data: {
 	  token: false,
-	  user_url: 'http://127.0.0.1:8000/me/',
+    user_url: 'http://127.0.0.1:8000/me/',
+    logout_url: 'http://127.0.0.1:8000/auth/token/logout/',
     user: '',
+    registration: false,
   },
   components: {
     'svgimg': svgIcon
@@ -47,13 +49,32 @@ new Vue({
         return true
       else
         return false
-    }
+    },
+    complited() {
+      if ((localStorage.getItem("auth_token")) && (!this.registration)) {
+        console.log("GOOD")
+        return true
+      
+      }
+      else
+        return false
+    },
   },
   methods: {
     logout: function() {
-      localStorage.removeItem("auth_token");
-      localStorage.removeItem("auth_user");
-      window.location = '/';
+      let Tokens = new FormData();
+      this.$http.post(this.logout_url, Tokens, {
+        headers: {
+          'Authorization': 'Token ' + localStorage.getItem("auth_token"),
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+        localStorage.removeItem("auth_token");
+        localStorage.removeItem("auth_user");
+        window.location = '/';
+        this.loading = false;
+      });
 	  },
 	  before: function () {
 		let NewReceptData = new FormData();
@@ -66,6 +87,8 @@ new Vue({
         
         localStorage.setItem("auth_user", response.data.data.attributes.username)
         this.user = localStorage.getItem("auth_user")
+        this.registration = response.data.data.attributes.finish
+        console.log(response.data.data)
 		})
 		.catch(function (error) {
 			console.log(error);

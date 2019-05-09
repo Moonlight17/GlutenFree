@@ -19,7 +19,7 @@ class Tag(models.Model):
 
 
 class Profile(models.Model):
-	
+	# email = models.EmailField(max_length=254)
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	avatar = models.ImageField(verbose_name="Изображение профиля", upload_to='media', default='‎⁨media/default.png')
 	quantity = models.IntegerField(verbose_name="Количество рецептов", default=0)

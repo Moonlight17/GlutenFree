@@ -7,7 +7,7 @@
 			</div>
 			<h5 class="card-title">{{recept.title}}</h5>
 			<router-link :to="{ name: 'CurrentUser', params: { id: author['id'] } }" class="card-text">{{author.username}}
-				<img id="avatar" :src="host_url + author.avatar"></router-link>
+				<img id="avatar" :src="author.avatar"></router-link>
 			<!-- <p class="card-text">{{author.username}} <img :src="host_url+author.avatar"></p> -->
 			<div>
 				<ul class="border card-text">

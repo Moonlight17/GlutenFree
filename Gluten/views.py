@@ -10,7 +10,7 @@ import json
 from .models import *
 
 
-from .serializers import ListReceptSerializer, AddReceptSerializer, ListCurrentReceptSerializer, AuthListCurrentReceptSerializer, TagSerializer, UserSerializer, AddCommentSerializer, AuthListCommentSerializer, ListCommentSerializer, ListUserReceptSerializer, ImageReceptSerializer
+from .serializers import ListReceptSerializer, AddReceptSerializer, ListCurrentReceptSerializer, AuthListCurrentReceptSerializer, TagSerializer, UserSerializer, MeUserSerializer, AddCommentSerializer, AuthListCommentSerializer, ListCommentSerializer, ListUserReceptSerializer, ImageReceptSerializer
 
 # отображение всех записей
 class ListRecept(APIView):
@@ -24,11 +24,6 @@ class ListRecept(APIView):
             recepts = Recept.objects.all().order_by('-pub_date')[count:count + 9]
             serializer = ListUserReceptSerializer(recepts, context={'request': request}, many=True)
             data = serializer.data[:]
-            try:
-                obj = Profile.objects.get(user=request.user)
-            except Profile.DoesNotExist:
-                obj = Profile(user=request.user, avatar='media/default.png', quantity = rec)
-                obj.save()
         else:
             recepts = Recept.objects.all().order_by('-pub_date')[count:count + 9]
             serializer = ListReceptSerializer(recepts, context={'request': request}, many=True)
@@ -110,7 +105,7 @@ class ListCurrentRecept(APIView):
             dataRecept = serializer.data[:]
         else:
             recepts = Recept.objects.filter(pk=id)
-            serializer = ListCurrentReceptSerializer(recepts, many=True)
+            serializer = ListCurrentReceptSerializer(recepts, context={'request': request}, many=True)
             dataRecept = serializer.data[:]
             # print(dataRecept)
         recept = Gallery.objects.filter(recept=id)
@@ -169,11 +164,9 @@ class AddRecept(APIView):
             for select_tag in Tag:
                 recept.tag_name.add(select_tag['id'])
             rec = Recept.objects.filter(user=Creater).count()
-            try:
-                obj = Profile.objects.get(user=request.user)
-            except Profile.DoesNotExist:
-                obj = Profile(user=request.user, avatar='media/default.png', quantity = rec)
-                obj.save()
+            obj = Profile.objects.get(user=request.user)
+            obj.quantity = rec
+            obj.save()
             # print(obj)
             # print("New Recept")
 
@@ -229,10 +222,19 @@ class Me(APIView):
     def post(self, request):
         # print("--------------------------")
         # print(request.user)
+        obj, created = Profile.objects.get_or_create(
+            user=request.user, defaults={ "avatar":'media/default.png', "quantity": 0,})
         user = User.objects.get(username = request.user)
-        serializer = UserSerializer(user)
-        data = serializer.data
-        # print(data)
-        # print("%%%%%%%%%%%%%%%%%%%%%")
-        return Response(data)
+        serializer = MeUserSerializer(user, context={'request': request})
+        data_user = serializer.data
+        print(created)
+        print(obj)
+        print(type(data_user))
+        print("%%%%%%%%%%%%%%%%%%%%%")
+        data = {}
+        # data = {'created': created}
+        # data.append(serializer.data)
+        # data.append(created)
+        # data_user.upgrade({'created':created})
+        return Response(data_user)
 

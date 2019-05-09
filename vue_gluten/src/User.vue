@@ -1,16 +1,19 @@
 <template>
-	<div id="user">
-		<!-- <h1>{{list}}</h1> -->
-			<div style="padding:0; margin:0;">
-				<div :key="key" v-for="(rec, key) in listRec.recepts" class="card mb-3">
-					<!-- <img src="..." class="card-img-top" alt="..."> -->
-					<router-link :to="{ name: 'CurrentRecept', params: { id: rec.id } }" class="card-body" :id="rec.id">
-						<h5 class="card-title">{{rec.title}}</h5>
-						<p class="card-text"><small class="text-muted">{{rec.pub_date}}</small></p>
-					</router-link>
+	<div>
+		<p class="BigText">OLOLOLOLOLOLOLOLOLOLOLOLOLOLOL</p>
+		<div id="user">
+			<!-- <h1>{{list}}</h1> -->
+				<div style="padding:0; margin:0;">
+					<div :key="key" v-for="(rec, key) in listRec.recepts" class="card mb-3">
+						<!-- <img src="..." class="card-img-top" alt="..."> -->
+						<router-link :to="{ name: 'CurrentRecept', params: { id: rec.id } }" class="card-body" :id="rec.id">
+							<h5 class="card-title">{{rec.title}}</h5>
+							<p class="card-text"><small class="text-muted">{{rec.pub_date}}</small></p>
+						</router-link>
+					</div>
 				</div>
 			</div>
-		</div>
+	</div>
 </template>
 
 <script>
@@ -51,6 +54,9 @@
 </script>
 
 <style>
+	.BigText{
+		font-size: 150px;
+	}
 	#list {
 		/* height: 100vh; */
 		/* overflow: hidden; */
