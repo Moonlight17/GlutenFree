@@ -7,6 +7,7 @@ import CurrentRecept from './ListRecept.vue'
 import Login from './Login.vue'
 import Registration from './Registration.vue'
 import Add_Recept from './Add_Recept.vue'
+import Me from './Me.vue'
 
 import svgIcon from './svg.vue'
 
@@ -24,6 +25,7 @@ const router = new VueRouter({
     { path: '/login', component: Login },
     { path: '/registration', component: Registration },
     { path: '/add', component: Add_Recept },
+    { path: '/me', component: Me },
 
     
   ]
@@ -52,7 +54,6 @@ new Vue({
     },
     complited() {
       if ((localStorage.getItem("auth_token")) && (!this.registration)) {
-        console.log("GOOD")
         return true
       
       }

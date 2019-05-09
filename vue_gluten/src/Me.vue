@@ -1,0 +1,108 @@
+<template>
+	<div>
+		<p class="BigText">OLOLOLOLOLOLOLOLOLOLOLOLOLOLOL</p>
+		<div id="user">
+			<!-- <h1>{{list}}</h1> -->
+				<div style="padding:0; margin:0;">
+					<div :key="key" v-for="(rec, key) in listRec.recepts" class="card mb-3">
+						<!-- <img src="..." class="card-img-top" alt="..."> -->
+						<router-link :to="{ name: 'CurrentRecept', params: { id: rec.id } }" class="card-body" :id="rec.id">
+							<h5 class="card-title">{{rec.title}}</h5>
+							<p class="card-text"><small class="text-muted">{{rec.pub_date}}</small></p>
+						</router-link>
+					</div>
+				</div>
+			</div>
+	</div>
+</template>
+
+<script>
+	export default {
+		name: "user",
+		data() {
+			return {
+				host_url: "http://127.0.0.1:8000",
+				user_url: "http://127.0.0.1:8000/me/",
+				listRec: [],
+				user: '',
+				loading: false,
+			};
+		},
+		mounted() {
+		},
+  methods: {
+	  before: function () {
+		let NewReceptData = new FormData();
+		this.$http.post(this.user_url, NewReceptData, {
+			headers: {
+				'Authorization': 'Token ' + localStorage.getItem("auth_token"),
+			}
+		})
+      .then(function (response) {
+        
+        localStorage.setItem("auth_user", response.data.data.attributes.username)
+        this.user = localStorage.getItem("auth_user")
+        this.registration = response.data.data.attributes.finish
+        console.log(response.data.data)
+		})
+		.catch(function (error) {
+			console.log(error);
+			this.loading = false;
+		});
+	  },
+  },
+	created: function () {
+		if (localStorage.getItem("auth_token")) this.before();
+}
+	};
+</script>
+
+<style>
+	.BigText{
+		font-size: 150px;
+	}
+	#list {
+		/* height: 100vh; */
+		/* overflow: hidden; */
+		/* margin-bottom: 30px; */
+		/* position: fixed; */
+
+
+	}
+
+	#logotip {
+		position: fixed;
+	}
+
+	#user {
+		font-family: "Avenir", Helvetica, Arial, sans-serif;
+		width: 70vw;
+		height: 80vh;
+		margin: 0 auto;
+		margin-top: 10vh;
+		overflow: scroll;
+
+	}
+	img#avatar{
+		height:55px;
+		width:55px;
+	}
+	h1,
+	h2 {
+		font-weight: normal;
+	}
+
+	ul {
+		list-style-type: none;
+		padding: 0;
+	}
+
+	li {
+		display: inline-block;
+		margin: 0 10px;
+	}
+
+	a {
+		color: #42b983;
+	}
+</style>

@@ -35,7 +35,7 @@
 			<router-link to="/" exact>+ Список</router-link>
 			<router-link v-show="tokens == false" to="/login" a>+ Вход</router-link>
 			<router-link v-show="tokens == false" to="/registration" a>+ Регистрация</router-link>
-			<router-link v-show="tokens == true" to="/registration" a>+ {{user}}</router-link>
+			<router-link v-show="tokens == true" to="/me" a>+ {{user}}</router-link>
 			<!-- <a href="#" v-show="tokens == true" to="/registration" a>+ {{user}}</a> -->
 			<a href="#" v-show="tokens == true" @click="logout()" a>+ Выход</a>
 
