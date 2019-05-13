@@ -2,6 +2,7 @@
 	<div>
 		<p class="BigText"></p>
 		<div id="me">
+			<p>TEST</p>
 			<div><img id="avatar" :src="info_user.attributes.avatar"></div>
 			<!-- <h1>{{list}}</h1> -->
 			<pre> {{$data}} </pre>
