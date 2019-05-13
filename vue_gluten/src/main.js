@@ -19,15 +19,15 @@ Vue.use(VueResource)
 
 const router = new VueRouter({
   routes: [
-    { path: '/', name:'all', component: List },
-    { path: '/recept/:id', name:'CurrentRecept', component: CurrentRecept },
-    { path: '/user/:id', name:'CurrentUser', component: CurrentUser },
-    { path: '/login', component: Login },
-    { path: '/registration', component: Registration },
-    { path: '/add', component: Add_Recept },
-    { path: '/me', component: Me },
+	{ path: '/', name:'all', component: List },
+	{ path: '/recept/:id', name:'CurrentRecept', component: CurrentRecept },
+	{ path: '/user/:id', name:'CurrentUser', component: CurrentUser },
+	{ path: '/login', component: Login },
+	{ path: '/registration', component: Registration },
+	{ path: '/add', component: Add_Recept },
+	{ path: '/me', component: Me },
 
-    
+	
   ]
 })
 
@@ -37,45 +37,53 @@ new Vue({
   name: "index",
   data: {
 	  token: false,
-    user_url: 'http://127.0.0.1:8000/me/',
-    logout_url: 'http://127.0.0.1:8000/auth/token/logout/',
-    user: '',
-    registration: false,
+	user_url: 'http://127.0.0.1:8000/me/',
+	logout_url: 'http://127.0.0.1:8000/auth/token/logout/',
+	user: '',
+	registration: false,
+	info_about_user: [],
   },
   components: {
-    'svgimg': svgIcon
+	'svgimg': svgIcon
   },
   computed: {
-    tokens() {
-      if (localStorage.getItem("auth_token")) 
-        return true
-      else
-        return false
-    },
-    complited() {
-      if ((localStorage.getItem("auth_token")) && (!this.registration)) {
-        return true
-      
-      }
-      else
-        return false
-    },
+	tokens() {
+	  if (localStorage.getItem("auth_token")) 
+		return true
+	  else
+		return false
+	},
+	complited() {
+	  if ((localStorage.getItem("auth_token")) && (!this.registration)) {
+		return true
+	  
+	  }
+	  else
+		return false
+	},
   },
   methods: {
-    logout: function() {
-      let Tokens = new FormData();
-      this.$http.post(this.logout_url, Tokens, {
-        headers: {
-          'Authorization': 'Token ' + localStorage.getItem("auth_token"),
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-        localStorage.removeItem("auth_token");
-        localStorage.removeItem("auth_user");
-        window.location = '/';
-        this.loading = false;
-      });
+	logout: function() {
+	  let Tokens = new FormData();
+	  this.$http.post(this.logout_url, Tokens, {
+		headers: {
+		  'Authorization': 'Token ' + localStorage.getItem("auth_token"),
+		}
+	  })
+		.then(function (response) {
+		  localStorage.removeItem("auth_token");
+		  localStorage.removeItem("auth_user");
+		  window.location = '/';
+		  this.loading = false;
+		})
+	  .catch(function (error) {
+		console.log(error);
+		this.loading = false;
+	  });
+		  
+	  	localStorage.removeItem("auth_token");
+		localStorage.removeItem("auth_user");
+		window.location = '/';
 	  },
 	  before: function () {
 		let NewReceptData = new FormData();
@@ -84,17 +92,25 @@ new Vue({
 				'Authorization': 'Token ' + localStorage.getItem("auth_token"),
 			}
 		})
-      .then(function (response) {
-        
-        localStorage.setItem("auth_user", response.data.data.attributes.username)
-        this.user = localStorage.getItem("auth_user")
-        this.registration = response.data.data.attributes.finish
-        console.log(response.data.data)
+	  .then(function (response) {
+		
+		localStorage.setItem("auth_user", response.data.data.attributes.username);
+		this.user = localStorage.getItem("auth_user");
+		this.registration = response.data.data.attributes.finish;
+		this.info_about_user = response.data.data;
+		// console.log(this.info_about_user);
+		console.log("data");
+		console.log(this.info_about_user);
+		this.$refs.data.user_me()
+
 		})
 		.catch(function (error) {
 			console.log(error);
 			this.loading = false;
 		});
+		  console.log("OLOLOLOLOLOLOLOLOLO");
+		  console.log(this.info_about_user);
+	  return this.info_about_user;
 	  },
   },
 	created: function () {

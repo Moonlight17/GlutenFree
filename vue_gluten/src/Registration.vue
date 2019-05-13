@@ -5,7 +5,7 @@
       <input v-model="Login" placeholder="Login"/>
       <input v-model="Password" placeholder="Password"/>
 	  <button @click="login()">Зарегистрироваться</button>
-		<pre>{{$data}}</pre>
+		<!-- <pre>{{$data}}</pre> -->
 
     </div>
     <!-- <h1>{{list}}</h1> -->

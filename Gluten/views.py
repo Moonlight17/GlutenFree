@@ -227,14 +227,5 @@ class Me(APIView):
         user = User.objects.get(username = request.user)
         serializer = MeUserSerializer(user, context={'request': request})
         data_user = serializer.data
-        print(created)
-        print(obj)
-        print(type(data_user))
-        print("%%%%%%%%%%%%%%%%%%%%%")
-        data = {}
-        # data = {'created': created}
-        # data.append(serializer.data)
-        # data.append(created)
-        # data_user.upgrade({'created':created})
         return Response(data_user)
 

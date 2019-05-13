@@ -19,7 +19,7 @@
 				</ul>
 			</div>
 			<a v-for="tag in recept.tag_name" href="#" class="badge badge-light">{{tag.name}}</a>
-			<p @click="Like()">
+			<p v-show="tokens == true" @click="Like()">
 				<svgimg  v-if="recept.like" name="svg-ExistsLike" />
 				<svgimg  v-else-if="!recept.like" name="svg-NoneLike" />
 			</p>
@@ -35,7 +35,7 @@
 						</router-link>
 						<p class="card-text"><small class="text-muted">{{com.pub_date}}</small></p>
 					</div>
-					<p @click="LikeComm(com.id, key)">
+					<p v-show="tokens == true" @click="LikeComm(com.id, key)">
 						<svgimg  v-if="com.like" name="svg-ExistsLike" />
 						<svgimg  v-else-if="!com.like" name="svg-NoneLike" />
 					</p>

@@ -1,58 +1,41 @@
 <template>
 	<div>
-		<p class="BigText">OLOLOLOLOLOLOLOLOLOLOLOLOLOLOL</p>
-		<div id="user">
+		<p class="BigText"></p>
+		<div id="me">
+			<div><img id="avatar" :src="info_user.attributes.avatar"></div>
 			<!-- <h1>{{list}}</h1> -->
-				<div style="padding:0; margin:0;">
-					<div :key="key" v-for="(rec, key) in listRec.recepts" class="card mb-3">
-						<!-- <img src="..." class="card-img-top" alt="..."> -->
-						<router-link :to="{ name: 'CurrentRecept', params: { id: rec.id } }" class="card-body" :id="rec.id">
-							<h5 class="card-title">{{rec.title}}</h5>
-							<p class="card-text"><small class="text-muted">{{rec.pub_date}}</small></p>
-						</router-link>
-					</div>
-				</div>
-			</div>
+			<pre> {{$data}} </pre>
+
+		</div>
 	</div>
 </template>
 
 <script>
 	export default {
-		name: "user",
+		name: "me",
 		data() {
 			return {
 				host_url: "http://127.0.0.1:8000",
 				user_url: "http://127.0.0.1:8000/me/",
-				listRec: [],
-				user: '',
+				info_user: [],
 				loading: false,
 			};
 		},
 		mounted() {
 		},
   methods: {
-	  before: function () {
-		let NewReceptData = new FormData();
-		this.$http.post(this.user_url, NewReceptData, {
-			headers: {
-				'Authorization': 'Token ' + localStorage.getItem("auth_token"),
-			}
-		})
-      .then(function (response) {
-        
-        localStorage.setItem("auth_user", response.data.data.attributes.username)
-        this.user = localStorage.getItem("auth_user")
-        this.registration = response.data.data.attributes.finish
-        console.log(response.data.data)
-		})
-		.catch(function (error) {
-			console.log(error);
-			this.loading = false;
-		});
-	  },
+	user_me: function () {
+		console.log("вызов")
+		this.info_user = this.$parent.info_about_user;
+		
+	}
   },
 	created: function () {
-		if (localStorage.getItem("auth_token")) this.before();
+		// // console.log(this.$parent.before());
+		this.info_user = this.$parent.info_about_user;
+		console.log("+++++++++++++");
+		console.log(this.info_user);
+		console.log("+++++++++++++");
 }
 	};
 </script>
@@ -84,8 +67,8 @@
 
 	}
 	img#avatar{
-		height:55px;
-		width:55px;
+		height:255px;
+		width:255px;
 	}
 	h1,
 	h2 {
