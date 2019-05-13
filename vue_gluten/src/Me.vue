@@ -2,7 +2,7 @@
 	<div>
 		<p class="BigText"></p>
 		<div id="me">
-			<p>Москва!!!</p>
+			<p>ХАХАХ!!!</p>
 			<p>TESTING</p>
 			<div><img id="avatar" :src="info_user.attributes.avatar"></div>
 			<!-- <h1>{{list}}</h1> -->
