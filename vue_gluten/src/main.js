@@ -101,7 +101,6 @@ new Vue({
 		// console.log(this.info_about_user);
 		console.log("data");
 		console.log(this.info_about_user);
-		this.$refs.data.user_me()
 
 		})
 		.catch(function (error) {
@@ -110,7 +109,6 @@ new Vue({
 		});
 		  console.log("OLOLOLOLOLOLOLOLOLO");
 		  console.log(this.info_about_user);
-	  return this.info_about_user;
 	  },
   },
 	created: function () {

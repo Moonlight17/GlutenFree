@@ -2,9 +2,7 @@
 	<div>
 		<p class="BigText"></p>
 		<div id="me">
-			<p>ХАХАХ!!!</p>
-			<p>TESTING</p>
-			<div><img id="avatar" :src="info_user.attributes.avatar"></div>
+			<div><img id="avatar" :src="info_user_detailed.avatar"></div>
 			<!-- <h1>{{list}}</h1> -->
 			<pre> {{$data}} </pre>
 
@@ -20,24 +18,39 @@
 				host_url: "http://127.0.0.1:8000",
 				user_url: "http://127.0.0.1:8000/me/",
 				info_user: [],
+				info_user_detailed: [],
 				loading: false,
 			};
 		},
 		mounted() {
 		},
   methods: {
-	user_me: function () {
-		console.log("вызов")
-		this.info_user = this.$parent.info_about_user;
-		
-	}
+	before: function () {
+		let NewReceptData = new FormData();
+		this.$http.post(this.user_url, NewReceptData, {
+			headers: {
+				'Authorization': 'Token ' + localStorage.getItem("auth_token"),
+			}
+		})
+	  .then(function (response) {
+		this.info_user = response.data.data;
+		this.info_user_detailed = this.info_user.attributes;
+
+		})
+		.catch(function (error) {
+			console.log(error);
+			this.loading = false;
+		});
+	  },
   },
 	created: function () {
+		this.before()
 		// // console.log(this.$parent.before());
-		this.info_user = this.$parent.info_about_user;
-		console.log("+++++++++++++");
-		console.log(this.info_user);
-		console.log("+++++++++++++");
+		// this.info_user = this.$parent.info_about_user;
+		// this.info_user_detailed = this.info_user.attributes;
+		// console.log("+++++++++++++");
+		// console.log(this.info_user);
+		// console.log("+++++++++++++");
 }
 	};
 </script>
