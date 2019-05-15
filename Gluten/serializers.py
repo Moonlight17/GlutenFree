@@ -22,10 +22,11 @@ class MeUserSerializer(serializers.ModelSerializer):
     username = serializers.CharField()
     first_name = serializers.CharField()
     last_name = serializers.CharField()
+    is_active = serializers.BooleanField()
     finish = serializers.SerializerMethodField('completed_registration')
     class Meta:
         model = Profile
-        fields = ('id', 'username', 'first_name', 'last_name', 'avatar', 'quantity', 'finish')
+        fields = ('id', 'username', 'first_name', 'last_name', 'avatar', 'quantity', 'is_active', 'finish')
 
     def completed_registration(self, obj):
         """Check for whether the visiting user fav'd the story.
