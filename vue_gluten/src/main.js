@@ -101,6 +101,7 @@ new Vue({
 		// console.log(this.info_about_user);
 		console.log("data");
 		console.log(this.info_about_user);
+		console.log(localStorage.getItem("auth_token"));
 
 		})
 		.catch(function (error) {

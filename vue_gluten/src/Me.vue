@@ -2,7 +2,10 @@
 	<div>
 		<p class="BigText"></p>
 		<div id="me">
-			<div><img id="avatar" :src="info_user_detailed.avatar"></div>
+			<div><img id="me_avatar" :src="info_user_detailed.avatar"></div>
+			<div><span>{{info_user_detailed.username}}</span></div>
+			<div><span>{{info_user_detailed.first_name}}</span> <span>{{info_user_detailed.last_name}}</span></div>
+			<div></div>
 			<!-- <h1>{{list}}</h1> -->
 			<pre> {{$data}} </pre>
 
@@ -81,7 +84,7 @@
 		overflow: scroll;
 
 	}
-	img#avatar{
+	img#me_avatar{
 		height:255px;
 		width:255px;
 	}
