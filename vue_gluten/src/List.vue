@@ -22,6 +22,9 @@
               <small class="text-muted">{{rec.pub_date}}</small>
               <svgimg v-if="rec.like" name="svg-ExistsLike"/>
             </p>
+            <p class="card-text">
+              <svgimg v-if="rec.mt" name="svg-ExistsLike"/>
+            </p>
           </router-link>
         </div>
         <div v-if="loading" class="d-flex justify-content-center">

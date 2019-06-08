@@ -53,9 +53,10 @@ class ListUserReceptSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     tag_name = TagSerializer()
     like = serializers.SerializerMethodField('has_like')
+    my = serializers.SerializerMethodField('my_recept')
     class Meta:
         model = Recept
-        fields = ('id', 'title', 'pub_date', 'user', 'tag_name', 'likes', 'like')
+        fields = ('id', 'title', 'pub_date', 'user', 'tag_name', 'likes', 'like', 'my')
         
     def has_like(self, obj):
         """Check for whether the visiting user fav'd the story.
@@ -65,6 +66,15 @@ class ListUserReceptSerializer(serializers.ModelSerializer):
         recept = obj # the story object
         # user_like_post = False # False by default
         return bool(LikeRecept.objects.filter(user=users.id, recept=recept.id)  )
+    
+    def my_recept(self, obj):
+        """Check for whether the visiting user fav'd the story.
+        """
+
+        users = self.context['request'].user
+        recept = obj # the story object
+        # user_like_post = False # False by default
+        return bool(recept.user == users)
 
 
 
@@ -104,9 +114,10 @@ class AuthListCurrentReceptSerializer(serializers.ModelSerializer):
     tag_name = TagSerializer(many=True,)
     like = serializers.SerializerMethodField('has_like')
     images = serializers.SerializerMethodField('has_image')
+    my = serializers.SerializerMethodField('my_recept')
     class Meta:
         model = Recept
-        fields = ('id', 'title', 'comp', 'text', 'pub_date', 'user', 'tag_name', 'like', 'likes', 'images')
+        fields = ('id', 'title', 'comp', 'text', 'pub_date', 'user', 'tag_name', 'like', 'likes', 'images', 'my')
 
     def has_like(self, obj):
         """Check for whether the visiting user fav'd the story.
@@ -128,6 +139,14 @@ class AuthListCurrentReceptSerializer(serializers.ModelSerializer):
             img_url.append(image.image.url)
         return img_url
     
+    def my_recept(self, obj):
+        """Check for whether the visiting user fav'd the story.
+        """
+
+        users = self.context['request'].user
+        recept = obj # the story object
+        # user_like_post = False # False by default
+        return bool(recept.user == users)
 
 
 
