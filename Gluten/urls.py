@@ -15,6 +15,7 @@ urlpatterns = [
     path('like/<int:id>/', views.LikeRec.as_view(), name='LikedUser'),
     path('like/<int:id>/<int:comm_id>/', views.LikeComm.as_view(), name='LikedUser'),
     path('recept/<int:id>/', views.ListCurrentRecept.as_view(), name='ListCurrentRecept'),
+    path('recept/<int:id>/edit/', views.EditRecept.as_view(), name='EditRecept'),
     path('comments/<int:id>/', views.ListCurrentComments.as_view(), name='ListCurrentComments'),
     path('addrecept/', views.AddRecept.as_view(), name='add_recept'),
     path('addrecept/photo/', views.AddReceptPhoto.as_view(), name='add_recept'),

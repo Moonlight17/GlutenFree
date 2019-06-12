@@ -53,10 +53,9 @@ class ListUserReceptSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     tag_name = TagSerializer()
     like = serializers.SerializerMethodField('has_like')
-    my = serializers.SerializerMethodField('my_recept')
     class Meta:
         model = Recept
-        fields = ('id', 'title', 'pub_date', 'user', 'tag_name', 'likes', 'like', 'my')
+        fields = ('id', 'title', 'pub_date', 'user', 'tag_name', 'likes', 'like')
         
     def has_like(self, obj):
         """Check for whether the visiting user fav'd the story.
@@ -66,15 +65,6 @@ class ListUserReceptSerializer(serializers.ModelSerializer):
         recept = obj # the story object
         # user_like_post = False # False by default
         return bool(LikeRecept.objects.filter(user=users.id, recept=recept.id)  )
-    
-    def my_recept(self, obj):
-        """Check for whether the visiting user fav'd the story.
-        """
-
-        users = self.context['request'].user
-        recept = obj # the story object
-        # user_like_post = False # False by default
-        return bool(recept.user == users)
 
 
 
