@@ -73,12 +73,6 @@
 		font-size: 150px;
 	}
 	#list {
-		/* height: 100vh; */
-		/* overflow: hidden; */
-		/* margin-bottom: 30px; */
-		/* position: fixed; */
-
-
 	}
 
 	#logotip {

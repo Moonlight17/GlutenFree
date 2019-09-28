@@ -1,3 +1,5 @@
+import datetime
+from django.utils import timezone
 from django.contrib.postgres.fields import JSONField
 from django.conf import settings
 # from djoser.urls.base import User
@@ -38,7 +40,9 @@ class Recept(models.Model):
 	tag_name = models.ManyToManyField(Tag)
 	likes = models.IntegerField(default=0)
 
-
+	def was_published_recently(self):
+		now = timezone.now()
+		return now - datetime.timedelta(days=1) <= self.pub_date <= now
 
 	def __str__(self):
 		return self.title
