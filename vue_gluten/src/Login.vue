@@ -26,6 +26,7 @@
 				username: "",
 				password: "",
 				errors: [],
+				link: this.$root.link,
 			};
 		},
 		methods: {
@@ -50,7 +51,7 @@
 				formData.append('username', this.username);
 				formData.append('password', this.password);
 				
-				this.$http.post("http://127.0.0.1:8000/auth/token/login", formData).then(
+				this.$http.post(this.link + "auth/token/login", formData).then(
 				function(response) {
 					console.log(response);
 					localStorage.setItem("auth_token", response.body.data.attributes.auth_token)
@@ -66,7 +67,7 @@
 			}
 		},
 		created: function () {
-			
+			// this.link = his.$root.link;
 		}
 	};
 </script>

@@ -121,12 +121,12 @@
 		},
 		data() {
 			return {
-				host_url: "http://127.0.0.1:8000",
-				list_url: "http://127.0.0.1:8000/recept/",
-				list_comment_url: "http://127.0.0.1:8000/comments/",
-				comm_url: "http://127.0.0.1:8000/addcomment/",
-				like_url: "http://127.0.0.1:8000/like/",
-				add_url: "http://127.0.0.1:8000/recept/",
+				host_url: this.$root.link,
+				list_url: this.$root.link+"recept/",
+				list_comment_url: this.$root.link+"comments/",
+				comm_url: this.$root.link+"addcomment/",
+				like_url: this.$root.link+"like/",
+				add_url: this.$root.link+"recept/",
 				recept: [],
 				comments: [],
 				user: false,

@@ -41,7 +41,8 @@ new Vue({
 		token: false,
 	user_url: 'http://127.0.0.1:8000/me/',
 	logout_url: 'http://127.0.0.1:8000/auth/token/logout/',
-	user: '',
+		user: '',
+	link: "",
 	registration: false,
 	info_about_user: [],
 	},
@@ -116,6 +117,7 @@ new Vue({
 	},
 	created: function () {
 		if (localStorage.getItem("auth_token")) this.before();
+		this.link = window.location.protocol+"//"+window.location.hostname+":8000/";
 }
 
 })

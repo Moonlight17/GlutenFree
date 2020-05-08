@@ -27,7 +27,8 @@ export default {
       Password: "",
       Email: "",
 	  Req_Errors: [],
-	  Error_position:[],
+    Error_position:[],
+    link: this.$root.link,
     };
   },
   watch: {
@@ -47,11 +48,11 @@ export default {
       formData.append("password", this.Password);
       formData.append("email", this.Email);
 
-      this.$http.post("http://127.0.0.1:8000/auth/users/", formData).then(
+      this.$http.post(this.link+"auth/users/", formData).then(
         function(response) {
           console.log(response);
           this.$http
-            .post("http://127.0.0.1:8000/auth/token/login", formData)
+            .post(this.link+"auth/token/login", formData)
             .then(
               function(response) {
                 // console.log(response.data.data.attributes.auth_token);

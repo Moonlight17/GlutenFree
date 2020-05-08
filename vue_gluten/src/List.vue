@@ -40,8 +40,8 @@ export default {
   name: "list",
   data() {
     return {
-      host_url: "http://127.0.0.1:8000",
-      list_url: "http://127.0.0.1:8000/",
+      host_url: "",
+      list_url: this.$root.link,
       list_rec: [],
       author: "",
       loading: false,
@@ -72,6 +72,7 @@ export default {
       if (!localStorage.getItem("auth_token")) {
         this.$http.get(this.list_url + this.start + "/").then(
           function(response) {
+            console.log(response);
             var list = response.data;
             this.list_rec = this.list_rec.concat(list.data);
             this.loading = false;
@@ -105,6 +106,7 @@ export default {
   },
   created: function() {
     this.all();
+    // console.log(window.location.href);
   }
 };
 </script>

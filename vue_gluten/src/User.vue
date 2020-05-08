@@ -21,8 +21,8 @@
 		name: "user",
 		data() {
 			return {
-				host_url: "http://127.0.0.1:8000",
-				list_url: "http://127.0.0.1:8000/user/",
+				host_url: this.$root.link,
+				list_url: this.$root.link+"user/",
 				listRec: [],
 				user: '',
 				loading: false,

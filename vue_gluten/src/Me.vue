@@ -18,8 +18,8 @@
 		name: "me",
 		data() {
 			return {
-				host_url: "http://127.0.0.1:8000",
-				user_url: "http://127.0.0.1:8000/me/",
+				host_url: this.$root.link,
+				user_url: this.$root.link+"me/",
 				info_user: [],
 				info_user_detailed: [],
 				loading: false,
@@ -48,12 +48,6 @@
   },
 	created: function () {
 		this.before()
-		// // console.log(this.$parent.before());
-		// this.info_user = this.$parent.info_about_user;
-		// this.info_user_detailed = this.info_user.attributes;
-		// console.log("+++++++++++++");
-		// console.log(this.info_user);
-		// console.log("+++++++++++++");
 }
 	};
 </script>

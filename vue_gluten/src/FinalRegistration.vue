@@ -30,8 +30,8 @@
 		name: "me",
 		data() {
 			return {
-				host_url: "http://127.0.0.1:8000",
-				user_url: "http://127.0.0.1:8000/me/",
+				host_url: this.$root.link,
+				user_url: this.$root.link+"me/",
 				info_user: [],
 				info_user_detailed: [],
 				loading: false,
