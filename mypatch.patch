@@ -1,0 +1,338 @@
+diff --git a/Gluten/__pycache__/__init__.cpython-36.pyc b/Gluten/__pycache__/__init__.cpython-36.pyc
+index dfb56f4..74c5c08 100644
+Binary files a/Gluten/__pycache__/__init__.cpython-36.pyc and b/Gluten/__pycache__/__init__.cpython-36.pyc differ
+diff --git a/Gluten/__pycache__/__init__.cpython-39.pyc b/Gluten/__pycache__/__init__.cpython-39.pyc
+new file mode 100644
+index 0000000..13dc1d6
+Binary files /dev/null and b/Gluten/__pycache__/__init__.cpython-39.pyc differ
+diff --git a/Gluten/__pycache__/admin.cpython-36.pyc b/Gluten/__pycache__/admin.cpython-36.pyc
+index fdfcf6b..71eee17 100644
+Binary files a/Gluten/__pycache__/admin.cpython-36.pyc and b/Gluten/__pycache__/admin.cpython-36.pyc differ
+diff --git a/Gluten/__pycache__/admin.cpython-39.pyc b/Gluten/__pycache__/admin.cpython-39.pyc
+new file mode 100644
+index 0000000..e29f7f9
+Binary files /dev/null and b/Gluten/__pycache__/admin.cpython-39.pyc differ
+diff --git a/Gluten/__pycache__/apps.cpython-36.pyc b/Gluten/__pycache__/apps.cpython-36.pyc
+index 3123e18..c09919b 100644
+Binary files a/Gluten/__pycache__/apps.cpython-36.pyc and b/Gluten/__pycache__/apps.cpython-36.pyc differ
+diff --git a/Gluten/__pycache__/apps.cpython-39.pyc b/Gluten/__pycache__/apps.cpython-39.pyc
+new file mode 100644
+index 0000000..eb162b4
+Binary files /dev/null and b/Gluten/__pycache__/apps.cpython-39.pyc differ
+diff --git a/Gluten/__pycache__/models.cpython-36.pyc b/Gluten/__pycache__/models.cpython-36.pyc
+index 8a797ba..f32a503 100644
+Binary files a/Gluten/__pycache__/models.cpython-36.pyc and b/Gluten/__pycache__/models.cpython-36.pyc differ
+diff --git a/Gluten/__pycache__/models.cpython-39.pyc b/Gluten/__pycache__/models.cpython-39.pyc
+new file mode 100644
+index 0000000..d7d4129
+Binary files /dev/null and b/Gluten/__pycache__/models.cpython-39.pyc differ
+diff --git a/Gluten/__pycache__/serializers.cpython-36.pyc b/Gluten/__pycache__/serializers.cpython-36.pyc
+index f8a6efe..55cdbe8 100644
+Binary files a/Gluten/__pycache__/serializers.cpython-36.pyc and b/Gluten/__pycache__/serializers.cpython-36.pyc differ
+diff --git a/Gluten/__pycache__/serializers.cpython-39.pyc b/Gluten/__pycache__/serializers.cpython-39.pyc
+new file mode 100644
+index 0000000..a9b621a
+Binary files /dev/null and b/Gluten/__pycache__/serializers.cpython-39.pyc differ
+diff --git a/Gluten/__pycache__/tests.cpython-36.pyc b/Gluten/__pycache__/tests.cpython-36.pyc
+new file mode 100644
+index 0000000..635b66a
+Binary files /dev/null and b/Gluten/__pycache__/tests.cpython-36.pyc differ
+diff --git a/Gluten/__pycache__/urls.cpython-36.pyc b/Gluten/__pycache__/urls.cpython-36.pyc
+index 3203ebd..7ddd469 100644
+Binary files a/Gluten/__pycache__/urls.cpython-36.pyc and b/Gluten/__pycache__/urls.cpython-36.pyc differ
+diff --git a/Gluten/__pycache__/urls.cpython-39.pyc b/Gluten/__pycache__/urls.cpython-39.pyc
+new file mode 100644
+index 0000000..b6dc561
+Binary files /dev/null and b/Gluten/__pycache__/urls.cpython-39.pyc differ
+diff --git a/Gluten/__pycache__/views.cpython-36.pyc b/Gluten/__pycache__/views.cpython-36.pyc
+index 6547141..b03352e 100644
+Binary files a/Gluten/__pycache__/views.cpython-36.pyc and b/Gluten/__pycache__/views.cpython-36.pyc differ
+diff --git a/Gluten/__pycache__/views.cpython-39.pyc b/Gluten/__pycache__/views.cpython-39.pyc
+new file mode 100644
+index 0000000..e208129
+Binary files /dev/null and b/Gluten/__pycache__/views.cpython-39.pyc differ
+diff --git a/Gluten/migrations/__pycache__/0001_initial.cpython-36.pyc b/Gluten/migrations/__pycache__/0001_initial.cpython-36.pyc
+index cdc38e7..24c2a4d 100644
+Binary files a/Gluten/migrations/__pycache__/0001_initial.cpython-36.pyc and b/Gluten/migrations/__pycache__/0001_initial.cpython-36.pyc differ
+diff --git a/Gluten/migrations/__pycache__/0001_initial.cpython-39.pyc b/Gluten/migrations/__pycache__/0001_initial.cpython-39.pyc
+new file mode 100644
+index 0000000..ee9ac60
+Binary files /dev/null and b/Gluten/migrations/__pycache__/0001_initial.cpython-39.pyc differ
+diff --git a/Gluten/migrations/__pycache__/__init__.cpython-36.pyc b/Gluten/migrations/__pycache__/__init__.cpython-36.pyc
+index 8a06a63..424341d 100644
+Binary files a/Gluten/migrations/__pycache__/__init__.cpython-36.pyc and b/Gluten/migrations/__pycache__/__init__.cpython-36.pyc differ
+diff --git a/Gluten/migrations/__pycache__/__init__.cpython-39.pyc b/Gluten/migrations/__pycache__/__init__.cpython-39.pyc
+new file mode 100644
+index 0000000..e1412f2
+Binary files /dev/null and b/Gluten/migrations/__pycache__/__init__.cpython-39.pyc differ
+diff --git a/Gluten/models.py b/Gluten/models.py
+index edf2709..f5cb264 100644
+--- a/Gluten/models.py
++++ b/Gluten/models.py
+@@ -1,3 +1,5 @@
++import datetime
++from django.utils import timezone
+ from django.contrib.postgres.fields import JSONField
+ from django.conf import settings
+ # from djoser.urls.base import User
+@@ -38,7 +40,9 @@ class Recept(models.Model):
+ 	tag_name = models.ManyToManyField(Tag)
+ 	likes = models.IntegerField(default=0)
+ 
+-
++	def was_published_recently(self):
++		now = timezone.now()
++		return now - datetime.timedelta(days=1) <= self.pub_date <= now
+ 
+ 	def __str__(self):
+ 		return self.title
+diff --git a/Gluten/serializers.py b/Gluten/serializers.py
+index 021b251..65cb66f 100644
+--- a/Gluten/serializers.py
++++ b/Gluten/serializers.py
+@@ -53,10 +53,9 @@ class ListUserReceptSerializer(serializers.ModelSerializer):
+     user = UserSerializer()
+     tag_name = TagSerializer()
+     like = serializers.SerializerMethodField('has_like')
+-    my = serializers.SerializerMethodField('my_recept')
+     class Meta:
+         model = Recept
+-        fields = ('id', 'title', 'pub_date', 'user', 'tag_name', 'likes', 'like', 'my')
++        fields = ('id', 'title', 'pub_date', 'user', 'tag_name', 'likes', 'like')
+         
+     def has_like(self, obj):
+         """Check for whether the visiting user fav'd the story.
+@@ -66,15 +65,6 @@ class ListUserReceptSerializer(serializers.ModelSerializer):
+         recept = obj # the story object
+         # user_like_post = False # False by default
+         return bool(LikeRecept.objects.filter(user=users.id, recept=recept.id)  )
+-    
+-    def my_recept(self, obj):
+-        """Check for whether the visiting user fav'd the story.
+-        """
+-
+-        users = self.context['request'].user
+-        recept = obj # the story object
+-        # user_like_post = False # False by default
+-        return bool(recept.user == users)
+ 
+ 
+ 
+diff --git a/Gluten/tests.py b/Gluten/tests.py
+index 7ce503c..701d842 100644
+--- a/Gluten/tests.py
++++ b/Gluten/tests.py
+@@ -1,3 +1,18 @@
++import datetime
++
++from django.utils import timezone
+ from django.test import TestCase
+ 
+-# Create your tests here.
++from .models import Recept
++
++
++class QuestionModelTests(TestCase):
++
++    def test_was_published_recently_with_future_question(self):
++        """
++        was_published_recently() returns False for questions whose pub_date
++        is in the future.
++        """
++        time = timezone.now() + datetime.timedelta(days=30)
++        future_question = Recept(pub_date=time)
++        self.assertIs(future_question.was_published_recently(), False)
+\ No newline at end of file
+diff --git a/Gluten/urls.py b/Gluten/urls.py
+index bd1e140..bed4bcb 100644
+--- a/Gluten/urls.py
++++ b/Gluten/urls.py
+@@ -15,6 +15,7 @@ urlpatterns = [
+     path('like/<int:id>/', views.LikeRec.as_view(), name='LikedUser'),
+     path('like/<int:id>/<int:comm_id>/', views.LikeComm.as_view(), name='LikedUser'),
+     path('recept/<int:id>/', views.ListCurrentRecept.as_view(), name='ListCurrentRecept'),
++    path('recept/<int:id>/edit/', views.EditRecept.as_view(), name='EditRecept'),
+     path('comments/<int:id>/', views.ListCurrentComments.as_view(), name='ListCurrentComments'),
+     path('addrecept/', views.AddRecept.as_view(), name='add_recept'),
+     path('addrecept/photo/', views.AddReceptPhoto.as_view(), name='add_recept'),
+diff --git a/Gluten/views.py b/Gluten/views.py
+index 47774e8..b4cd5c7 100644
+--- a/Gluten/views.py
++++ b/Gluten/views.py
+@@ -134,6 +134,42 @@ class ListCurrentComments(APIView):
+         return Response(dataComment)
+ 
+ 
++# добавление рецепта
++class EditRecept(APIView):
++    permission_classes = [permissions.IsAuthenticated,]  #for avtorise
++    parser_classes = (MultiPartParser,)
++    # serializer_class = AddReceptSerializer(many=True)
++    # model = Recept
++
++    def post(self, request, id):
++        Recept_ID = []
++        data = json.loads(request.body.decode('utf-8'))
++        Text = json.loads(data['Text'])
++        Comp = json.loads(data['Comp'])
++        Title = data['Title']
++        print(str(request.META['CONTENT_TYPE']))
++
++        
++        if ( data['Title'] != '' and data['Comp'] != '[]' and data['Text'] != '[]'):
++            Creater = User.objects.get(username=request.user)
++            recept = Recept.objects.get(id=id)
++            if (recept.user == Creater): 
++                recept.title = Title
++                recept.comp = Comp
++                recept.text = Text
++                recept.save()
++                Recept_ID.append(recept.id)
++                # print(type(recept.text))
++                rec = Recept.objects.filter(user=Creater).count()
++                obj = Profile.objects.get(user=request.user)
++                obj.quantity = rec
++                obj.save()
++                # print(obj)
++                # print("New Recept")
++
++        return Response(Recept_ID)
++
++
+ # добавление рецепта
+ class AddRecept(APIView):
+     permission_classes = [permissions.IsAuthenticated,]  #for avtorise
+diff --git a/GlutenFree/__pycache__/__init__.cpython-36.pyc b/GlutenFree/__pycache__/__init__.cpython-36.pyc
+index b59d322..d269025 100644
+Binary files a/GlutenFree/__pycache__/__init__.cpython-36.pyc and b/GlutenFree/__pycache__/__init__.cpython-36.pyc differ
+diff --git a/GlutenFree/__pycache__/__init__.cpython-39.pyc b/GlutenFree/__pycache__/__init__.cpython-39.pyc
+new file mode 100644
+index 0000000..e4766bb
+Binary files /dev/null and b/GlutenFree/__pycache__/__init__.cpython-39.pyc differ
+diff --git a/GlutenFree/__pycache__/prod_settings.cpython-36.pyc b/GlutenFree/__pycache__/prod_settings.cpython-36.pyc
+index 62de755..fc04784 100644
+Binary files a/GlutenFree/__pycache__/prod_settings.cpython-36.pyc and b/GlutenFree/__pycache__/prod_settings.cpython-36.pyc differ
+diff --git a/GlutenFree/__pycache__/prod_settings.cpython-39.pyc b/GlutenFree/__pycache__/prod_settings.cpython-39.pyc
+new file mode 100644
+index 0000000..cad6346
+Binary files /dev/null and b/GlutenFree/__pycache__/prod_settings.cpython-39.pyc differ
+diff --git a/GlutenFree/__pycache__/settings.cpython-36.pyc b/GlutenFree/__pycache__/settings.cpython-36.pyc
+index 95c608c..05632db 100644
+Binary files a/GlutenFree/__pycache__/settings.cpython-36.pyc and b/GlutenFree/__pycache__/settings.cpython-36.pyc differ
+diff --git a/GlutenFree/__pycache__/settings.cpython-39.pyc b/GlutenFree/__pycache__/settings.cpython-39.pyc
+new file mode 100644
+index 0000000..fcc8ae5
+Binary files /dev/null and b/GlutenFree/__pycache__/settings.cpython-39.pyc differ
+diff --git a/GlutenFree/__pycache__/urls.cpython-36.pyc b/GlutenFree/__pycache__/urls.cpython-36.pyc
+index d86febc..b20ec25 100644
+Binary files a/GlutenFree/__pycache__/urls.cpython-36.pyc and b/GlutenFree/__pycache__/urls.cpython-36.pyc differ
+diff --git a/GlutenFree/__pycache__/urls.cpython-39.pyc b/GlutenFree/__pycache__/urls.cpython-39.pyc
+new file mode 100644
+index 0000000..bc149b2
+Binary files /dev/null and b/GlutenFree/__pycache__/urls.cpython-39.pyc differ
+diff --git a/GlutenFree/__pycache__/wsgi.cpython-36.pyc b/GlutenFree/__pycache__/wsgi.cpython-36.pyc
+index e8d81f9..fbc90b5 100644
+Binary files a/GlutenFree/__pycache__/wsgi.cpython-36.pyc and b/GlutenFree/__pycache__/wsgi.cpython-36.pyc differ
+diff --git a/GlutenFree/__pycache__/wsgi.cpython-39.pyc b/GlutenFree/__pycache__/wsgi.cpython-39.pyc
+new file mode 100644
+index 0000000..48e7c39
+Binary files /dev/null and b/GlutenFree/__pycache__/wsgi.cpython-39.pyc differ
+diff --git a/Start.bat b/Start.bat
+new file mode 100644
+index 0000000..b6ed98e
+--- /dev/null
++++ b/Start.bat
+@@ -0,0 +1,4 @@
++START D:\ANC_programm\project\Scripts\back.bat
++START D:\ANC_programm\project\Scripts\front.bat
++@REM start /k "D: & cd /d D:\ANC_programm\project\Scripts & activate.bat & front.bat"
++@REM start /k "D: & cd /d D:\ANC_programm\project\Scripts & activate.bat & back.bat"
+\ No newline at end of file
+diff --git a/Templates/index.html b/Templates/index.html
+index a4a12af..bbb1831 100644
+--- a/Templates/index.html
++++ b/Templates/index.html
+@@ -3,16 +3,5 @@
+     </head>
+ 
+     <body>
+-        lksnn
+-        lksnn
+-        lksnn
+-        lksnn
+-        lksnn
+-        lksnn
+-        lksnn
+-        lksnn
+-        lksnn
+-        lksnn
+-
+     </body>       
+ </html>
+\ No newline at end of file
+diff --git a/req.txt b/req.txt
+index 0415d50..8afea97 100644
+--- a/req.txt
++++ b/req.txt
+@@ -18,9 +18,6 @@ itypes==1.1.0
+ Jinja2==2.10
+ MarkupSafe==1.1.1
+ openapi-codec==1.3.2
+-Pillow==6.0.0
+-psycopg2==2.7.7
+-psycopg2-binary==2.7.7
+ PyJWT==1.7.1
+ pytz==2018.9
+ requests==2.21.0
+diff --git a/requirements.txt b/requirements.txt
+new file mode 100644
+index 0000000..1b0a7b6
+--- /dev/null
++++ b/requirements.txt
+@@ -0,0 +1,30 @@
++certifi==2019.3.9
++chardet==3.0.4
++coreapi==2.3.3
++coreschema==0.0.4
++Django==2.2
++django-cors-headers==2.5.2
++django-rest-swagger==2.2.0
++django-summernote==0.8.11.4
++django-templated-mail==1.1.1
++djangorestframework==3.9.2
++djangorestframework-jsonapi==2.7.0
++djangorestframework-jwt==1.11.0
++djangorestframework-simplejwt==4.1.2
++djoser==1.5.1
++idna==2.8
++inflection==0.3.1
++itypes==1.1.0
++Jinja2==2.10
++MarkupSafe==1.1.1
++openapi-codec==1.3.2
++Pillow==8.1.0
++psycopg2-binary==2.8.6
++PyJWT==1.7.1
++pytz==2018.9
++requests==2.21.0
++simplejson==3.16.0
++six==1.12.0
++sqlparse==0.3.0
++uritemplate==3.0.0
++urllib3==1.24.1
+diff --git a/vue_gluten/webpack.config.js b/vue_gluten/webpack.config.js
+index e38d8aa..5b838c7 100644
+--- a/vue_gluten/webpack.config.js
++++ b/vue_gluten/webpack.config.js
+@@ -47,7 +47,11 @@ module.exports = {
+   },
+   devServer: {
+     historyApiFallback: true,
++<<<<<<< HEAD
+     host: '0.0.0.0',
++=======
++    host: 'localhost',
++>>>>>>> ea5f1a52ae63342df0fc5e613a7e1c8c1a0c2171
+     noInfo: true,
+     overlay: true
+   },

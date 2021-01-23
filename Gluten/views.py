@@ -135,6 +135,42 @@ class ListCurrentComments(APIView):
 
 
 # добавление рецепта
+class EditRecept(APIView):
+    permission_classes = [permissions.IsAuthenticated,]  #for avtorise
+    parser_classes = (MultiPartParser,)
+    # serializer_class = AddReceptSerializer(many=True)
+    # model = Recept
+
+    def post(self, request, id):
+        Recept_ID = []
+        data = json.loads(request.body.decode('utf-8'))
+        Text = json.loads(data['Text'])
+        Comp = json.loads(data['Comp'])
+        Title = data['Title']
+        print(str(request.META['CONTENT_TYPE']))
+
+        
+        if ( data['Title'] != '' and data['Comp'] != '[]' and data['Text'] != '[]'):
+            Creater = User.objects.get(username=request.user)
+            recept = Recept.objects.get(id=id)
+            if (recept.user == Creater): 
+                recept.title = Title
+                recept.comp = Comp
+                recept.text = Text
+                recept.save()
+                Recept_ID.append(recept.id)
+                # print(type(recept.text))
+                rec = Recept.objects.filter(user=Creater).count()
+                obj = Profile.objects.get(user=request.user)
+                obj.quantity = rec
+                obj.save()
+                # print(obj)
+                # print("New Recept")
+
+        return Response(Recept_ID)
+
+
+# добавление рецепта
 class AddRecept(APIView):
     permission_classes = [permissions.IsAuthenticated,]  #for avtorise
     parser_classes = (MultiPartParser,)
