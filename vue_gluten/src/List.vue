@@ -1,7 +1,7 @@
 <template>
   <div id="list">
     <h1>{{list}}</h1>
-	<h1>TEST</h1>
+	OLOLO
     <div id="recept" @scroll="onScroll">
       <div style="padding:0; margin:0;">
         <div :key="key" v-for="(rec, key) in list_rec" class="card mb-3">
