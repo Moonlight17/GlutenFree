@@ -2,12 +2,24 @@
 	<div>
 		<p class="BigText"></p>
 		<div id="me">
+<h1>ВСЕМ КРАНТЫ</h1>
+
 			<div><img id="me_avatar" :src="info_user_detailed.avatar"></div>
-			<div><span>{{info_user_detailed.username}}</span></div>
-			<div><span>{{info_user_detailed.first_name}}</span> <span>{{info_user_detailed.last_name}}</span></div>
-			<div></div>
+			<div>
+				<h1>
+				{{info_user_detailed.username}}
+				</h1>
+				<p>
+					<div v-if="info_user.attributes.first_name"><h1>{{info_user_detailed.first_name}}</h1></div>
+					<div v-else><input type="text" v-model="user.first_name"></div>
+				</p>
+				<p>
+					<div v-if="info_user.attributes.last_name"><h1>{{info_user_detailed.last_name}}</h1></div>
+					<div v-else><input type="text" v-model="user.last_name"></div>
+				</p>
+			</div>
 			<!-- <h1>{{list}}</h1> -->
-			<pre> {{$data}} </pre>
+			<pre>{{$data.info_user_detailed}}</pre>
 
 		</div>
 	</div>
@@ -23,6 +35,10 @@
 				info_user: [],
 				info_user_detailed: [],
 				loading: false,
+				user:{
+					first_name: "",
+					last_name: "",
+				},
 			};
 		},
 		mounted() {
@@ -57,12 +73,6 @@
 		font-size: 150px;
 	}
 	#list {
-		/* height: 100vh; */
-		/* overflow: hidden; */
-		/* margin-bottom: 30px; */
-		/* position: fixed; */
-
-
 	}
 
 	#logotip {

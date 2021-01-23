@@ -54,8 +54,10 @@ export default {
 	name: "add",
 	data() {
 		return {
-			add_url: "http://127.0.0.1:8000/addrecept/",
+
 			title: "",
+			link: this.$root.link,
+			add_url: link+"addrecept/",
 			text: "",
 			tags: [],
 			SelectTag: [],
@@ -166,7 +168,7 @@ export default {
 		},
 		tag: function() {
 			this.loading = true;
-			this.$http.get("http://127.0.0.1:8000/tag/").then(
+			this.$http.get(this.link+ "tag/").then(
 				function(response) {
 					this.tags = response.data.data;
 					this.loading = false;

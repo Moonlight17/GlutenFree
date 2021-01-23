@@ -1,6 +1,11 @@
 <template>
 	<div id="gluten">
 		<div>
+			<button v-show="recept.my" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+				<svgimg  name="svg-Edit"/>
+			</button>
+
+			
 			<div id="images">
 				<span  v-for="image in recept.images"><img id="img" :src="host_url + image"></span>
 				
@@ -53,6 +58,57 @@
 			<button v-show="com" @click="add_comment">Оставить</button>
 			</form>
 		</div>
+		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form @submit.prevent="">
+							<input :class="{'is-invalid': errors.length}" class="form-control" v-model="recept.title">
+							<br>
+							<br>
+							<ul>
+								<li id="inl" v-for="(par, index) in part" :key="part.id">
+									{{ par.title }}
+									<button :id="index" type="button" @click="part.splice(index, 1)">Удалить</button>
+								</li>
+							</ul>
+
+								<label for="new-comp">Компоненты:</label>
+							<p v-for="comp in recept.comp">
+								<textarea style="width:100%" name="ololo" v-model="comp.title" id="new-comp" :class="{'is-invalid': errors.length}" class="form-control" placeholder="Сметана - 100 г"></textarea>
+							</p>
+							<label for="new-part">Рецепт:</label>
+							<p v-for="part in recept.text">
+								<textarea style="width:100%" name="ololo" v-model="part.title" id="new-part" :class="{'is-invalid': errors.length}" class="form-control" placeholder="смешать что-то с чем-то и получить еще что-то"></textarea>
+							</p>
+							<!-- </form> -->
+							<ul>
+								<li v-for="(com, index) in comp" :key="comp.id">
+									{{ com.title }}
+									<button type="button" @click="comp.splice(index, 1)">Удалить</button>
+								</li>
+							</ul>
+							<div v-for="image in images" id="image">
+								<img :src="image" alt="image" id="output">
+							</div>
+							<select :class="{'is-invalid': errors.length}" class="form-control" multiple v-model="recept.tag_name">
+								<option v-for="(tag, index) in recept.tag_name" :value="tag">{{tag.name}}</option>
+							</select>
+							</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button @click="CheckForm()" type="button" class="btn btn-primary">Save changes</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -61,15 +117,16 @@
 	export default {
 		name: "Recept",
 		components: {
-    		'svgimg': svgIcon
-  		},
+			'svgimg': svgIcon
+		},
 		data() {
 			return {
-				host_url: "http://127.0.0.1:8000",
-				list_url: "http://127.0.0.1:8000/recept/",
-				list_comment_url: "http://127.0.0.1:8000/comments/",
-				comm_url: "http://127.0.0.1:8000/addcomment/",
-				like_url: "http://127.0.0.1:8000/like/",
+				host_url: this.$root.link,
+				list_url: this.$root.link+"recept/",
+				list_comment_url: this.$root.link+"comments/",
+				comm_url: this.$root.link+"addcomment/",
+				like_url: this.$root.link+"like/",
+				add_url: this.$root.link+"recept/",
 				recept: [],
 				comments: [],
 				user: false,
@@ -77,6 +134,15 @@
 				receptid: '',
 				comment: '',
 				loading: false,
+				title: "",
+				comp: [],
+				part: [],
+				images: [],
+				errors: [],
+				newCompText: "",
+				newPartText: "",
+
+
 			};
 		},
 		computed: {
@@ -222,7 +288,64 @@
 					}
 				);
 				}
-			}
+			},
+			CheckForm: function(e) {
+				// console.log(this.part.length);
+				// console.log(this.comp.length);
+				if(this.recept.title && this.recept.text && this.recept.comp) this.submit();
+				this.errors = [];
+				if(!this.recept.title) this.errors.push("Name required.");
+				if(!this.recept.text.length) this.errors.push("Part required.");
+				if(!this.recept.comp.length) this.errors.push("Comp required.");
+
+			},
+			addNewPart: function() {
+				this.errors = [];
+				if(!this.newPartText.length) this.errors.push("PartRecept required.");
+				// console.log(this.$refs.files.files[0]);
+				// console.log(this.newPartText.length);
+				if (this.newPartText.length){
+						this.part.push({
+						id: this.nextPartId++,
+						title: this.newPartText,
+					});
+					document.getElementById("my_file").value = "";
+					this.newPartText = "";
+				};
+			},
+			addNewComp: function() {
+				this.comp.push({
+					id: this.nextCompId++,
+					title: this.newCompText
+				});
+				this.newCompText = "";
+			},
+			submit: function() {
+				let NewReceptData = new FormData();
+				NewReceptData = {
+					Title: this.recept.title,
+					Comp: JSON.stringify(this.recept.comp),
+					Text: JSON.stringify(this.recept.text),
+					Tag: JSON.stringify(this.recept.tag_name),
+				};
+				console.log(NewReceptData);
+				this.$http
+					.post(this.add_url+this.receptid+"/edit/", NewReceptData, {
+						headers: {
+							Authorization: "Token " + localStorage.getItem("auth_token")
+						}
+					})
+					.then(
+						function(response) {
+							var id = response.data.data;
+							this.loading = false;
+						},
+						function(error) {
+							console.log(error);
+							this.loading = false;
+						}
+					);
+			},
 		},
 		created: function () {
 			this.receptid = this.$route.params.id;
