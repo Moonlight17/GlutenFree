@@ -134,7 +134,7 @@ class ListCurrentComments(APIView):
         return Response(dataComment)
 
 
-# добавление рецепта
+# редактирование рецепта
 class EditRecept(APIView):
     permission_classes = [permissions.IsAuthenticated,]  #for avtorise
     parser_classes = (MultiPartParser,)
@@ -146,17 +146,21 @@ class EditRecept(APIView):
         data = json.loads(request.body.decode('utf-8'))
         Text = json.loads(data['Text'])
         Comp = json.loads(data['Comp'])
+        Tag = data['Tag']
         Title = data['Title']
         print(str(request.META['CONTENT_TYPE']))
 
         
-        if ( data['Title'] != '' and data['Comp'] != '[]' and data['Text'] != '[]'):
+        if ( data['Title'] != '' and data['Comp'] != '[]' and data['Text'] != '[]' and data['Tag'] != '[]'):
             Creater = User.objects.get(username=request.user)
             recept = Recept.objects.get(id=id)
             if (recept.user == Creater): 
                 recept.title = Title
                 recept.comp = Comp
                 recept.text = Text
+                recept.tag_name.clear()
+                for select_tag in Tag:
+                    recept.tag_name.add(select_tag['id'])
                 recept.save()
                 Recept_ID.append(recept.id)
                 # print(type(recept.text))

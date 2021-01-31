@@ -4,7 +4,6 @@
 			<button v-show="recept.my" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
 				<svgimg  name="svg-Edit"/>
 			</button>
-
 			
 			<div id="images">
 				<span  v-for="image in recept.images"><img id="img" :src="host_url + image"></span>
@@ -58,7 +57,7 @@
 			<button v-show="com" @click="add_comment">Оставить</button>
 			</form>
 		</div>
-		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div v-if="tokens == true" class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -97,8 +96,13 @@
 							<div v-for="image in images" id="image">
 								<img :src="image" alt="image" id="output">
 							</div>
-							<select :class="{'is-invalid': errors.length}" class="form-control" multiple v-model="recept.tag_name">
+<!-- исправить для редактирования. не срабатывает выделение активных тегов -->
+							<!-- <select :class="{'is-invalid': errors.length}" class="form-control" multiple v-model="recept.tag_name">
 								<option v-for="(tag, index) in recept.tag_name" :value="tag">{{tag.name}}</option>
+							</select> -->
+
+							<select :class="{'is-invalid': errors.length}" class="form-control" multiple v-model="recept.tag_name">
+								<option v-for="(tag, index) in tags" :value="tag">{{tag.name}}</option>
 							</select>
 							</form>
 					</div>
@@ -121,13 +125,15 @@
 		},
 		data() {
 			return {
-				host_url: this.$root.link,
+				host_url: this.$root.link.slice (0, -1),
 				list_url: this.$root.link+"recept/",
 				list_comment_url: this.$root.link+"comments/",
 				comm_url: this.$root.link+"addcomment/",
 				like_url: this.$root.link+"like/",
 				add_url: this.$root.link+"recept/",
+				tag_url: this.$root.link+"tag/",
 				recept: [],
+				tags:[],
 				comments: [],
 				user: false,
 				author: '',
@@ -141,6 +147,7 @@
 				errors: [],
 				newCompText: "",
 				newPartText: "",
+				nextPartId: 1,
 
 
 			};
@@ -249,6 +256,33 @@
 						};
 				
 			},
+			Tags: function () {
+				if (!this.loading){
+					if(localStorage.getItem("auth_token"))
+						{this.$http.get(this.tag_url, {
+								headers: {
+									'Authorization': 'Token ' + localStorage.getItem("auth_token"),
+								}
+							}).then(
+							function (response) {
+								console.log(response.data.data)
+								this.tags = response.data.data;
+							},
+							function (error) {
+								console.log(error);
+							}
+						)}else{
+							this.$http.get(this.tag_url).then(
+								function (response) {
+									this.tags = response.data.data;
+								},
+								function (error) {
+									console.log(error);
+								}
+							)
+						}
+				};
+			},
 			Like: function(){
 
 				if (!this.loading && this.user){
@@ -322,13 +356,24 @@
 			},
 			submit: function() {
 				let NewReceptData = new FormData();
+				this.recept.text=[];
+				let str_per = this.recept.text;
+				for (let sl in str_per){
+					this.recept.text.push({
+						id: this.nextPartId++,
+						title: this.str_per[sl].title,
+					});
+					// console.log(str_per[sl].title);
+				}
+				// let str_per = this.recept.text.split('\n');
+				console.log("str_per", str_per);
 				NewReceptData = {
 					Title: this.recept.title,
 					Comp: JSON.stringify(this.recept.comp),
 					Text: JSON.stringify(this.recept.text),
-					Tag: JSON.stringify(this.recept.tag_name),
+					Tag: this.recept.tag_name,
 				};
-				console.log(NewReceptData);
+				// console.log(NewReceptData);
 				this.$http
 					.post(this.add_url+this.receptid+"/edit/", NewReceptData, {
 						headers: {
@@ -351,6 +396,7 @@
 			this.receptid = this.$route.params.id;
 			this.Recept();
 			this.Comments();
+			this.Tags();
 		}
 	};
 </script>
